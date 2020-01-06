@@ -150,6 +150,9 @@
   <ItemGroup>
     <ClCompile Include="Lab01.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="kangaroo.jpg" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
