@@ -45,8 +45,6 @@ int main(int argc, char **argv)
 
 	help(argv);
 
-	//image counter
-	size_t imageCount{getNumJPG()};
 	char buffer[32];
 
 	cv::namedWindow("Example 2-10", cv::WINDOW_AUTOSIZE);
@@ -88,7 +86,7 @@ int main(int argc, char **argv)
 		if (keyPressed == 120)
 		{
 			cv::waitKey(1000);
-			sprintf(buffer, "image%02d.jpg", imageCount++);
+			sprintf(buffer, "image%02d.jpg", getNumJPG());
 			cv::imwrite(buffer, frame);
 		}
 		else if (keyPressed == 32 || keyPressed == 13)
