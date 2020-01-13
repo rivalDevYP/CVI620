@@ -24,7 +24,7 @@ int getNumJPG()
 	currentDir = opendir(".");
 	struct dirent *de_1 = NULL;
 
-	int num = 0;
+	size_t num = 0;
 
 	while ((de_1 = readdir(currentDir)) != NULL)
 	{
