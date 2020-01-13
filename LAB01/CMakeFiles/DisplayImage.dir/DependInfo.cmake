@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/sample/DisplayImage.cpp" "/run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/sample/CMakeFiles/DisplayImage.dir/DisplayImage.cpp.o"
+  "/run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/LAB01/DisplayImage.cpp" "/run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/LAB01/CMakeFiles/DisplayImage.dir/DisplayImage.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

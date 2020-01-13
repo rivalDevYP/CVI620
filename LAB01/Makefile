@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/sample
+CMAKE_SOURCE_DIR = /run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/LAB01
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/sample
+CMAKE_BINARY_DIR = /run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/LAB01
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/sample/CMakeFiles /run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/sample/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/LAB01/CMakeFiles /run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/LAB01/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/sample/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/LAB01/CMakeFiles 0
 .PHONY : all
 
 # The main clean target

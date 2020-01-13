@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/sample
+CMAKE_SOURCE_DIR = /run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/LAB02
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/sample
+CMAKE_BINARY_DIR = /run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/LAB02
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/sample/CMakeFiles /run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/sample/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/LAB02/CMakeFiles /run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/LAB02/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/sample/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/LAB02/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -111,44 +111,44 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named DisplayImage
+# Target rules for targets named Lab02
 
 # Build rule for target.
-DisplayImage: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 DisplayImage
-.PHONY : DisplayImage
+Lab02: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 Lab02
+.PHONY : Lab02
 
 # fast build rule for target.
-DisplayImage/fast:
-	$(MAKE) -f CMakeFiles/DisplayImage.dir/build.make CMakeFiles/DisplayImage.dir/build
-.PHONY : DisplayImage/fast
+Lab02/fast:
+	$(MAKE) -f CMakeFiles/Lab02.dir/build.make CMakeFiles/Lab02.dir/build
+.PHONY : Lab02/fast
 
-DisplayImage.o: DisplayImage.cpp.o
+Lab02.o: Lab02.cpp.o
 
-.PHONY : DisplayImage.o
+.PHONY : Lab02.o
 
 # target to build an object file
-DisplayImage.cpp.o:
-	$(MAKE) -f CMakeFiles/DisplayImage.dir/build.make CMakeFiles/DisplayImage.dir/DisplayImage.cpp.o
-.PHONY : DisplayImage.cpp.o
+Lab02.cpp.o:
+	$(MAKE) -f CMakeFiles/Lab02.dir/build.make CMakeFiles/Lab02.dir/Lab02.cpp.o
+.PHONY : Lab02.cpp.o
 
-DisplayImage.i: DisplayImage.cpp.i
+Lab02.i: Lab02.cpp.i
 
-.PHONY : DisplayImage.i
+.PHONY : Lab02.i
 
 # target to preprocess a source file
-DisplayImage.cpp.i:
-	$(MAKE) -f CMakeFiles/DisplayImage.dir/build.make CMakeFiles/DisplayImage.dir/DisplayImage.cpp.i
-.PHONY : DisplayImage.cpp.i
+Lab02.cpp.i:
+	$(MAKE) -f CMakeFiles/Lab02.dir/build.make CMakeFiles/Lab02.dir/Lab02.cpp.i
+.PHONY : Lab02.cpp.i
 
-DisplayImage.s: DisplayImage.cpp.s
+Lab02.s: Lab02.cpp.s
 
-.PHONY : DisplayImage.s
+.PHONY : Lab02.s
 
 # target to generate assembly for a file
-DisplayImage.cpp.s:
-	$(MAKE) -f CMakeFiles/DisplayImage.dir/build.make CMakeFiles/DisplayImage.dir/DisplayImage.cpp.s
-.PHONY : DisplayImage.cpp.s
+Lab02.cpp.s:
+	$(MAKE) -f CMakeFiles/Lab02.dir/build.make CMakeFiles/Lab02.dir/Lab02.cpp.s
+.PHONY : Lab02.cpp.s
 
 # Help Target
 help:
@@ -157,11 +157,11 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... rebuild_cache"
-	@echo "... DisplayImage"
+	@echo "... Lab02"
 	@echo "... edit_cache"
-	@echo "... DisplayImage.o"
-	@echo "... DisplayImage.i"
-	@echo "... DisplayImage.s"
+	@echo "... Lab02.o"
+	@echo "... Lab02.i"
+	@echo "... Lab02.s"
 .PHONY : help
 
 

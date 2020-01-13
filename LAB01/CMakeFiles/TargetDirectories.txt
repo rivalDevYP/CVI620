@@ -1,0 +1,3 @@
+/run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/LAB01/CMakeFiles/rebuild_cache.dir
+/run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/LAB01/CMakeFiles/DisplayImage.dir
+/run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/LAB01/CMakeFiles/edit_cache.dir
