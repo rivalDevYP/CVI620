@@ -1,5 +1,10 @@
-// Example 2-10. The same object can load videos from a camera or a file
-//
+/**********************/
+/* CVI620             */
+/* Lab 03             */
+/* Group 7            */
+/* January 20, 2020   */
+/**********************/
+
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/types.hpp>
 #include <iostream>
