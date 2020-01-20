@@ -14,16 +14,16 @@ int main()
     cv::Mat black_box(HEIGHT, WIDTH, CV_8UC3, cv::Scalar(0, 0, 0));
     bool input_not_valid = true;
     double x1 = 0.0, x2 = 0.0, y1 = 0.0, y2 = 0.0;
-    std::string x1_str = "", y1_str = "", x2_str = "", y2_str = "";
+    std::string x1_y1_str = "", x2_y2_str = "";
     cv::Vec3b selectedColor;
     char userColorSelection = '\0';
 
     while (input_not_valid)
     {
         std::cout << "Enter the coordinates of the top left corner (x y): ";
-        std::cin >> x1_str >> y1_str;
-        x1 = std::stod(x1_str);
-        y1 = std::stod(y1_str);
+        std::getline(std::cin, x1_y1_str);
+        x1 = std::stod(x1_y1_str.substr(0, x1_y1_str.find(' ')));
+        y1 = std::stod(x1_y1_str.substr(x1_y1_str.find(' ')));
         
         if ((x1 < 0 || x1 > HEIGHT) || (y1 < 0 || y1 > HEIGHT))
         {
@@ -39,11 +39,11 @@ int main()
     while (input_not_valid)
     {
         std::cout << "Enter the coordinates of the bottom right corner (x y): ";
-        std::cin >> x2_str >> y2_str;
-        x1 = std::stod(x2_str);
-        y1 = std::stod(y2_str);
+        std::getline(std::cin, x2_y2_str);
+        x2 = std::stod(x2_y2_str.substr(0, x2_y2_str.find(' ')));
+        y2 = std::stod(x2_y2_str.substr(x2_y2_str.find(' ')));
         
-        if ((x2 < 0 || x2 > HEIGHT) || (y2 < 0 || y2 > HEIGHT))
+        if ((x1 < 0 || x1 > HEIGHT) || (y1 < 0 || y1 > HEIGHT))
         {
             std::cout << "ERROR => please enter a valid value" << std::endl;
             continue;
@@ -55,10 +55,10 @@ int main()
     }
 
     /* FOR TESTING PURPOSES, REMOVE BEFORE FINAL SUBMISSION */
-    // std::cout << x1 << std::endl;
-    // std::cout << x2 << std::endl;
-    // std::cout << y1 << std::endl;
-    // std::cout << y2 << std::endl;
+    std::cout << x1 << std::endl;
+    std::cout << x2 << std::endl;
+    std::cout << y1 << std::endl;
+    std::cout << y2 << std::endl;
 
     std::cout << "Enter a letter for color (x:random, r:red, g:green, b:blue, k:black, w:white, y:yellow, c:cyan, m:magenta): ";
     std::cin >> userColorSelection;
