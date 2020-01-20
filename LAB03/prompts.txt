@@ -1,0 +1,7 @@
+Enter the coordinates of the top left corner (x y): 100 100
+Enter the coordinates of the bottom right corner (x y): 200 200
+Enter a letter for color (x:random, r:red, g:green, b:blue, k:black, w:white, y:yellow, c:cyan, m:magenta): y
+Area: 10000, Width: 100, Height: 100
+Enter the coordinates of a point: 50 50
+This point (50, 50) is not inside the rectangle
+Continue (y/n)? y

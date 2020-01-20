@@ -1,0 +1,37 @@
+/run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/LAB03/Lab03.cpp: In function ‘int main()’:
+/run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/LAB03/Lab03.cpp:17:9: error: ‘cv::viz’ has not been declared
+   17 |     cv::viz::Color selectedColor;
+      |         ^~~
+/run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/LAB03/Lab03.cpp:92:9: error: ‘selectedColor’ was not declared in this scope
+   92 |         selectedColor = cv::viz::Color::black();
+      |         ^~~~~~~~~~~~~
+/run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/LAB03/Lab03.cpp:92:29: error: ‘cv::viz’ has not been declared
+   92 |         selectedColor = cv::viz::Color::black();
+      |                             ^~~
+/run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/LAB03/Lab03.cpp:94:29: error: ‘cv::viz’ has not been declared
+   94 |         selectedColor = cv::viz::Color::white();
+      |                             ^~~
+/run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/LAB03/Lab03.cpp:96:29: error: ‘cv::viz’ has not been declared
+   96 |         selectedColor = cv::viz::Color::red();
+      |                             ^~~
+/run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/LAB03/Lab03.cpp:98:29: error: ‘cv::viz’ has not been declared
+   98 |         selectedColor = cv::viz::Color::green();
+      |                             ^~~
+/run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/LAB03/Lab03.cpp:100:29: error: ‘cv::viz’ has not been declared
+  100 |         selectedColor = cv::viz::Color::blue();
+      |                             ^~~
+/run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/LAB03/Lab03.cpp:102:29: error: ‘cv::viz’ has not been declared
+  102 |         selectedColor = cv::viz::Color::cyan();
+      |                             ^~~
+/run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/LAB03/Lab03.cpp:104:29: error: ‘cv::viz’ has not been declared
+  104 |         selectedColor = cv::viz::Color::yellow();
+      |                             ^~~
+/run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/LAB03/Lab03.cpp:106:29: error: ‘cv::viz’ has not been declared
+  106 |         selectedColor = cv::viz::Color::magenta();
+      |                             ^~~
+/run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/LAB03/Lab03.cpp:117:21: error: ‘selectedColor’ was not declared in this scope
+  117 |             color = selectedColor;
+      |                     ^~~~~~~~~~~~~
+make[2]: *** [CMakeFiles/Lab03.dir/build.make:63: CMakeFiles/Lab03.dir/Lab03.cpp.o] Error 1
+make[1]: *** [CMakeFiles/Makefile2:76: CMakeFiles/Lab03.dir/all] Error 2
+make: *** [Makefile:84: all] Error 2
