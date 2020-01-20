@@ -1,6 +1,7 @@
 // Example 2-10. The same object can load videos from a camera or a file
 //
 #include <opencv2/opencv.hpp>
+#include <opencv2/core/types.hpp>
 #include <iostream>
 #include <string>
 #include <dirent.h>
@@ -33,9 +34,9 @@ int main()
 
     while (input_not_valid)
     {
-        std::cout << "please enter a coordinate for x2: ";
-        std::cin >> x2;
-        if (x2 < 0 || x2 > HEIGHT)
+        std::cout << "please enter a coordinate for y1: ";
+        std::cin >> y1;
+        if (y1 < 0 || y1 > HEIGHT)
         {
             std::cout << "ERROR => please enter a valid value" << std::endl;
             continue;
@@ -48,9 +49,9 @@ int main()
 
     while (input_not_valid)
     {
-        std::cout << "please enter a coordinate for y1: ";
-        std::cin >> y1;
-        if (y1 < 0 || y1 > HEIGHT)
+        std::cout << "please enter a coordinate for x2: ";
+        std::cin >> x2;
+        if (x2 < 0 || x2 > HEIGHT)
         {
             std::cout << "ERROR => please enter a valid value" << std::endl;
             continue;
@@ -107,8 +108,25 @@ int main()
         selectedColor = cv::Scalar(rand() % 255, rand() % 255);
     };
 
-    
+//     Black (0, 0, 0)
+// Red (0, 0, 255)
+// Green (0, 255, 0)
+// Blue (255, 0, 0)
+// Yellow (0, 255, 255)
+// Magenta (255, 0, 255)
+// Cyan (255, 255, 0)
+// White (255, 255, 255)
 
-    // cv::imshow("black",black_box);
-    // cv::waitKey(0);
+    for (int index = y1; index < y2; index++)
+    {
+        for (int index2 = x1; index2 < x2; index2++)
+        {
+            cv::Vec3b& color = black_box.at<cv::Vec3b>(index, index2);
+
+            color = selectedColor;
+        }
+    }
+
+    cv::imshow("black",black_box);
+    cv::waitKey(0);
 }

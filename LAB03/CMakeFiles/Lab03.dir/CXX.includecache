@@ -9,6 +9,8 @@
 /run/media/yathavan/0C72FF30449E201F/SCHOOL/SEMESTER6/CVI620/LAB03/Lab03.cpp
 opencv2/opencv.hpp
 -
+opencv2/core/types.hpp
+-
 iostream
 -
 string
