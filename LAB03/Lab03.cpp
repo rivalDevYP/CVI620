@@ -10,6 +10,7 @@
 #include <iostream>
 #include <string>
 #include <cstdio>
+#include <thread>
 
 #define HEIGHT 480
 #define WIDTH 640
@@ -17,89 +18,106 @@
 int main()
 {
     cv::Mat black_box(HEIGHT, WIDTH, CV_8UC3, cv::Scalar(0, 0, 0));
-    bool input_not_valid = true;
-    double x1 = 0.0, x2 = 0.0, y1 = 0.0, y2 = 0.0;
-    std::string x1_y1_str = "", x2_y2_str = "";
-    cv::Vec3b selectedColor;
-    char userColorSelection = '\0';
+    cv::imshow("black", black_box);
+    cv::waitKey(1000);
 
-    while (input_not_valid)
+    while (1)
     {
-        std::cout << "Enter the coordinates of the top left corner (x y): ";
-        std::getline(std::cin, x1_y1_str);
-        x1 = std::stod(x1_y1_str.substr(0, x1_y1_str.find(' ')));
-        y1 = std::stod(x1_y1_str.substr(x1_y1_str.find(' ')));
-        
-        if ((x1 < 0 || x1 > HEIGHT) || (y1 < 0 || y1 > HEIGHT))
+        bool input_not_valid = true;
+        double x1 = 0.0, x2 = 0.0, y1 = 0.0, y2 = 0.0;
+        std::string x1_y1_str = "", x2_y2_str = "";
+        cv::Vec3b selectedColor;
+        char userColorSelection = '\0';
+
+        while (input_not_valid) // x1y1 input
         {
-            std::cout << "ERROR => please enter a valid value" << std::endl;
-            continue;
+            std::cout << "Enter the coordinates of the top left corner (x y): ";
+            std::fflush(stdin);
+            std::getline(std::cin, x1_y1_str);            
+            x1 = std::stod(x1_y1_str.substr(0, x1_y1_str.find(' ')));
+            y1 = std::stod(x1_y1_str.substr(x1_y1_str.find(' ')));
+
+            if ((x1 < 0 || x1 > HEIGHT) || (y1 < 0 || y1 > HEIGHT))
+            {
+                std::cout << "ERROR => please enter a valid value" << std::endl;
+                continue;
+            }
+            else
+            {
+                break;
+            }
         }
-        else
+
+        while (input_not_valid) // x2y2 input
+        {
+            std::cout << "Enter the coordinates of the bottom right corner (x y): ";
+            std::fflush(stdin);
+            std::getline(std::cin, x2_y2_str);
+            x2 = std::stod(x2_y2_str.substr(0, x2_y2_str.find(' ')));
+            y2 = std::stod(x2_y2_str.substr(x2_y2_str.find(' ')));
+
+            if ((x1 < 0 || x1 > HEIGHT) || (y1 < 0 || y1 > HEIGHT))
+            {
+                std::cout << "ERROR => please enter a valid value" << std::endl;
+                continue;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        /* FOR TESTING PURPOSES, REMOVE BEFORE FINAL SUBMISSION */
+        std::cout << x1 << std::endl;
+        std::cout << x2 << std::endl;
+        std::cout << y1 << std::endl;
+        std::cout << y2 << std::endl;
+
+        std::cout << "Enter a letter for color (x:random, r:red, g:green, b:blue, k:black, w:white, y:yellow, c:cyan, m:magenta): ";
+        std::cin >> userColorSelection;
+
+        switch (userColorSelection)
+        {
+        case 'k':
+            selectedColor = cv::Vec3b(0, 0, 0);
+        case 'w':
+            selectedColor = cv::Vec3b(255, 255, 255);
+        case 'r':
+            selectedColor = cv::Vec3b(0, 0, 255);
+        case 'g':
+            selectedColor = cv::Vec3b(0, 255, 0);
+        case 'b':
+            selectedColor = cv::Vec3b(255, 0, 0);
+        case 'c':
+            selectedColor = cv::Vec3b(255, 255, 0);
+        case 'y':
+            selectedColor = cv::Vec3b(0, 255, 255);
+        case 'm':
+            selectedColor = cv::Vec3b(255, 0, 255);
+        case 'x':
+            selectedColor = cv::Vec3b(rand() % 256, rand() % 256, rand() % 256);
+        };
+
+        for (int index = y1; index < y2; index++)
+        {
+            for (int index2 = x1; index2 < x2; index2++)
+            {
+                cv::Vec3b &color = black_box.at<cv::Vec3b>(index, index2);
+
+                color = selectedColor;
+            }
+        }
+
+        cv::imshow("black", black_box);
+        cv::waitKey(1000);
+
+        char ch = '\0';
+        std::cout << "Continue (y/n)?";
+        std::cin >> ch;
+        if (ch != 'y')
         {
             break;
         }
+        std::cin.ignore();
     }
-
-    while (input_not_valid)
-    {
-        std::cout << "Enter the coordinates of the bottom right corner (x y): ";
-        std::getline(std::cin, x2_y2_str);
-        x2 = std::stod(x2_y2_str.substr(0, x2_y2_str.find(' ')));
-        y2 = std::stod(x2_y2_str.substr(x2_y2_str.find(' ')));
-        
-        if ((x1 < 0 || x1 > HEIGHT) || (y1 < 0 || y1 > HEIGHT))
-        {
-            std::cout << "ERROR => please enter a valid value" << std::endl;
-            continue;
-        }
-        else
-        {
-            break;
-        }
-    }
-
-    /* FOR TESTING PURPOSES, REMOVE BEFORE FINAL SUBMISSION */
-    std::cout << x1 << std::endl;
-    std::cout << x2 << std::endl;
-    std::cout << y1 << std::endl;
-    std::cout << y2 << std::endl;
-
-    std::cout << "Enter a letter for color (x:random, r:red, g:green, b:blue, k:black, w:white, y:yellow, c:cyan, m:magenta): ";
-    std::cin >> userColorSelection;
-
-    switch (userColorSelection)
-    {
-    case 'k':
-        selectedColor = cv::Vec3b(0, 0, 0);
-    case 'w':
-        selectedColor = cv::Vec3b(255, 255, 255);
-    case 'r':
-        selectedColor = cv::Vec3b(0, 0, 255);
-    case 'g':
-        selectedColor = cv::Vec3b(0, 255, 0);
-    case 'b':
-        selectedColor = cv::Vec3b(255, 0, 0);
-    case 'c':
-        selectedColor = cv::Vec3b(255, 255, 0);
-    case 'y':
-        selectedColor = cv::Vec3b(0, 255, 255);
-    case 'm':
-        selectedColor = cv::Vec3b(255, 0, 255);
-    case 'x':
-        selectedColor = cv::Vec3b(rand() % 256, rand() % 256, rand() % 256);
-    };
-
-    for (int index = y1; index < y2; index++)
-    {
-        for (int index2 = x1; index2 < x2; index2++)
-        {
-            cv::Vec3b& color = black_box.at<cv::Vec3b>(index, index2);
-
-            color = selectedColor;
-        }
-    }
-
-    cv::imshow("black",black_box);
-    cv::waitKey(0);
 }
