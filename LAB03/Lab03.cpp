@@ -73,19 +73,19 @@ int main()
     case 'k':
         selectedColor = cv::Vec3b(0, 0, 0);
     case 'w':
-        selectedColor = cv::Vec3b(0, 0, 255);
-    case 'r':
-        selectedColor = cv::Vec3b(0, 255, 0);
-    case 'g':
-        selectedColor = cv::Vec3b(255, 0, 0);
-    case 'b':
-        selectedColor = cv::Vec3b(0, 255, 255);
-    case 'c':
-        selectedColor = cv::Vec3b(255, 0, 255);
-    case 'y':
-        selectedColor = cv::Vec3b(255, 255, 0);
-    case 'm':
         selectedColor = cv::Vec3b(255, 255, 255);
+    case 'r':
+        selectedColor = cv::Vec3b(0, 0, 255);
+    case 'g':
+        selectedColor = cv::Vec3b(0, 255, 0);
+    case 'b':
+        selectedColor = cv::Vec3b(255, 0, 0);
+    case 'c':
+        selectedColor = cv::Vec3b(255, 255, 0);
+    case 'y':
+        selectedColor = cv::Vec3b(0, 255, 255);
+    case 'm':
+        selectedColor = cv::Vec3b(255, 0, 255);
     case 'x':
         selectedColor = cv::Vec3b(rand() % 256, rand() % 256, rand() % 256);
     };
