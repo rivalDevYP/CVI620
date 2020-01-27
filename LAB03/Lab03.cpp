@@ -5,6 +5,12 @@
 /* January 20, 2020   */
 /**********************/
 
+/* We, Group 7 (Gabriella Ko, Patrick O'reilly, Yathavan Parameshwaran), declare 
+that the attached assignment is our own work in accordance with the Seneca Academic 
+Policy. We have not copied any part of this assignment, manually or electronically, 
+from any other source including web sites, unless specified as references. We have 
+not distributed our work to other students. */
+
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/types.hpp>
 #include <iostream>
@@ -116,7 +122,7 @@ int main()
         // Check the values. Are they correct?
 
         cv::Point pt1(x1, y1);
-        cv::Point pt2(x2, y2); 
+        cv::Point pt2(x2, y2);
         cv::Rect rectObj1(pt1, pt2);
 
         std::cout << "Area of Rect object: " << rectObj1.area() << std::endl;
@@ -156,7 +162,7 @@ int main()
         std::cin >> ch;
         if (ch != 'y')
         {
-            // save the iamge as Lab03.jpg
+            // save the image as Lab03.jpg
             cv::imwrite("Lab03.jpg", black_box);
             exit(0);
         }
