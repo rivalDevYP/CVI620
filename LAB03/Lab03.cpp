@@ -130,6 +130,7 @@ int main()
         std::string x3_y3_str = "";
         int x3 = 0, y3 = 0;
 
+        std::cin.ignore();
         std::cout << "Please enter the coordinates for a point (x y): ";
         std::fflush(stdin);
         std::getline(std::cin, x3_y3_str);
