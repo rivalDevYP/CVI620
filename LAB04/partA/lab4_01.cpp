@@ -49,12 +49,12 @@ int main(int argc, char** argv) {
 				b_hist; //histogram for the colour blue (part2)
 			
 			//load images
-			image = cv::imread(cv::samples::findFile("fruits.jpg"));
-			image1 = cv::imread(cv::samples::findFile("LinuxLogo.jpg"));
-			image2 = cv::imread(cv::samples::findFile("WindowsLogo.jpg"));
-			// image = cv::imread("fruits.jpg");
-			// image2 = cv::imread("WindowsLogo.jpg");
-			// image1 = cv::imread("LinuxLogo.jpg");
+			// image = cv::imread(cv::samples::findFile("https://raw.githubusercontent.com/opencv/opencv/master/samples/data/fruits.jpg"));
+			// image1 = cv::imread(cv::samples::findFile("https://raw.githubusercontent.com/opencv/opencv/master/samples/data/LinuxLogo.jpg"));
+			// image2 = cv::imread(cv::samples::findFile("https://raw.githubusercontent.com/opencv/opencv/master/samples/data/WindowsLogo.jpg"));
+			image = cv::imread("fruits.jpg", cv::IMREAD_COLOR);
+			image2 = cv::imread("LinuxLogo.jpg", cv::IMREAD_COLOR);
+			image1 = cv::imread("WindowsLogo.jpg", cv::IMREAD_COLOR);
 
 			//cv::Mat dst(image1.rows*2, image1.cols, CV_8UC3, cv::Scalar(0, 0, 0));
 			//cv::Rect roi(cv::Rect(0, 0, image1.cols, image1.rows));
@@ -66,15 +66,15 @@ int main(int argc, char** argv) {
 
 			if (image.empty()) // Check for invalid input
 			{
-				std::cout << "Could not open or find the image" << std::endl;
+				std::cout << "Could not open or find Image" << std::endl;
 				return -1;
 			}
 			if (image1.empty()) {
-				std::cout << "Could not open or find the image" << std::endl;
+				std::cout << "Could not open or find Image1" << std::endl;
 				return -1;
 			}
 			if (image2.empty()) {
-				std::cout << "Could not open or find the image" << std::endl;
+				std::cout << "Could not open or find Image2" << std::endl;
 				return -1;
 			}
 
