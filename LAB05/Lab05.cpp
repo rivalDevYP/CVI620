@@ -11,9 +11,9 @@ We, (Gabriella Ko, Patrick O'reilly, Yathavan Parameshwaran), declare that the a
 /* code for generateNoise acquired from 'A Practical Introduction to COMPUTER VISION WITH OPENCV by Kenneth Dawson-Howe' */
 cv::Mat &generateNoise(cv::Mat &incomingImage, double incomingNoisePercentage)
 {
-    int imageRows = incomingImage.rows;           // number of rows in incoming image
-    int imageColumns = incomingImage.cols;        // number of columns in incoming image
-    int imageChannels = incomingImage.channels(); // number of matrix images in incoming image
+    int imageRows = incomingImage.rows;
+    int imageColumns = incomingImage.cols; 
+    int imageChannels = incomingImage.channels();
 
     int noisePoints = (int)(((double)imageRows * imageColumns * imageChannels) * incomingNoisePercentage / 100.0);
 
