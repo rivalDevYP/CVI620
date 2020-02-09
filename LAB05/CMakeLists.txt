@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 2.8)
+project( Lab05 )
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread")
+find_package( OpenCV REQUIRED )
+include_directories( ${OpenCV_INCLUDE_DIRS} )
+add_executable( Lab05 Lab05.cpp )
+target_link_libraries( Lab05 ${OpenCV_LIBS} )
