@@ -50,6 +50,7 @@ int main()
     std::cout << "Please enter a probability between 0 and 1: ";
     std::cin >> userProbabilityInput;
     cv::Mat noisyImage = generateNoise(myImage, userProbabilityInput);
+    cv::imwrite("noisy_image.jpg", noisyImage);
     cv::imshow("noisy image", noisyImage);
     cv::waitKey(1000);
 
@@ -57,6 +58,7 @@ int main()
 
     cv::Mat smoothedImage;
     cv::blur(noisyImage, smoothedImage, cv::Size(3, 3));
+    cv::imwrite("smoothed_image.jpg", smoothedImage);
     cv::imshow("smoothed image", smoothedImage);
     cv::waitKey(1000);
 
@@ -110,6 +112,7 @@ int main()
     cv::Mat filteredImage;
     cv::Matx<float, 3, 3> myKernel = cv::Matx<float, 3, 3>::all(1 / 9.0f);
     cv::filter2D(noisyImage, filteredImage, CV_8U, myKernel);
+    cv::imwrite("box_filtered_image.jpg", filteredImage);
     cv::imshow("box filtered image", filteredImage);
     cv::waitKey(1000);
 
@@ -117,6 +120,7 @@ int main()
 
     cv::Mat medianFilteredImg;
     cv::medianBlur(noisyImage, medianFilteredImg, 3);
+    cv::imwrite("median_filtered_image.jpg", medianFilteredImg);
     cv::imshow("median filtered image", medianFilteredImg);
     cv::waitKey(1000);
 
