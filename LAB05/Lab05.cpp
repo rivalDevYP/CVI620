@@ -27,7 +27,7 @@ cv::Mat &generateNoise(cv::Mat &incomingImage, double incomingNoisePercentage)
 
         uchar *pixel = incomingImage.ptr<uchar>(row) + (column * imageChannels) + channel;
 
-        *pixel = (rand() % 2 == 1) ? 255 : 0;
+        *pixel = (rand() % 2 == 1) ? 200 : 0;
     }
 
     return incomingImage;
@@ -43,7 +43,7 @@ int main()
     myImage = cv::imread("dell_latitude.jpg", cv::IMREAD_COLOR);
     cv::namedWindow("dell latitude", cv::WINDOW_AUTOSIZE);
     cv::imshow("dell latitude", myImage);
-    cv::waitKey(1000);
+    cv::waitKey(0);
 
     // b. Ask for a probability value between 0 and 1, and implement the salt and pepper noise with the given probability. Create a noisy image with p=0.1. Display the noisy image.
 
@@ -52,7 +52,7 @@ int main()
     cv::Mat noisyImage = generateNoise(myImage, userProbabilityInput);
     cv::imwrite("noisy_image.jpg", noisyImage);
     cv::imshow("noisy image", noisyImage);
-    cv::waitKey(1000);
+    cv::waitKey(0);
 
     // c. Smooth the above noisy image using a 3 x 3 box kernel. Display the blurred image.
 
@@ -60,7 +60,7 @@ int main()
     cv::blur(noisyImage, smoothedImage, cv::Size(3, 3));
     cv::imwrite("smoothed_image.jpg", smoothedImage);
     cv::imshow("smoothed image", smoothedImage);
-    cv::waitKey(1000);
+    cv::waitKey(0);
 
     // d. Choose a pixel and output the pixel’s blue value, as well as its neighbors’.
 
@@ -114,7 +114,7 @@ int main()
     cv::filter2D(noisyImage, filteredImage, CV_8U, myKernel);
     cv::imwrite("box_filtered_image.jpg", filteredImage);
     cv::imshow("box filtered image", filteredImage);
-    cv::waitKey(1000);
+    cv::waitKey(0);
 
     // f. De-noise the noisy image using a median filter and display the resulting image.
 
@@ -122,7 +122,7 @@ int main()
     cv::medianBlur(noisyImage, medianFilteredImg, 3);
     cv::imwrite("median_filtered_image.jpg", medianFilteredImg);
     cv::imshow("median filtered image", medianFilteredImg);
-    cv::waitKey(1000);
+    cv::waitKey(0);
 
     // g. Compare the results of the above filters. Which filter works better for de-noising?
 

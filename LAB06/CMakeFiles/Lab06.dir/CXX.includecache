@@ -1,0 +1,14 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/yathavan/Documents/Semester6/SCHOOL/SEMESTER6/CVI620/LAB06/Lab06.cpp
+iostream
+-
+opencv4/opencv2/opencv.hpp
+-
+
