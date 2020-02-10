@@ -7,6 +7,8 @@ We, (Gabriella Ko, Patrick O'reilly, Yathavan Parameshwaran), declare that the a
 #include <iostream>
 #include <opencv4/opencv2/opencv.hpp>
 #include <opencv4/opencv2/highgui.hpp>
+#include <vector>
+#include <numeric>
 
 /* code for generateNoise acquired from 'A Practical Introduction to COMPUTER VISION WITH OPENCV by Kenneth Dawson-Howe' */
 cv::Mat &generateNoise(cv::Mat &incomingImage, double incomingNoisePercentage)
@@ -58,37 +60,65 @@ int main()
     cv::imshow("smoothed image", smoothedImage);
     cv::waitKey(1000);
 
-    // d. Choose a pixel and output the pixel’s blue value, as well as its neighbors’. 
+    // d. Choose a pixel and output the pixel’s blue value, as well as its neighbors’.
 
     int pos1 = 500, pos2 = 500;
+    std::vector<short> blueVals;
+    blueVals.push_back((short)noisyImage.at<cv::Vec3b>(pos1 - 1, pos2 - 1)[0]);
+    blueVals.push_back((short)noisyImage.at<cv::Vec3b>(pos1 - 1, pos2)[0]);
+    blueVals.push_back((short)noisyImage.at<cv::Vec3b>(pos1 - 1, pos2 + 1)[0]);
+    blueVals.push_back((short)noisyImage.at<cv::Vec3b>(pos1, pos2 - 1)[0]);
+    blueVals.push_back((short)noisyImage.at<cv::Vec3b>(pos1, pos2)[0]);
+    blueVals.push_back((short)noisyImage.at<cv::Vec3b>(pos1, pos2 + 1)[0]);
+    blueVals.push_back((short)noisyImage.at<cv::Vec3b>(pos1 + 1, pos2 - 1)[0]);
+    blueVals.push_back((short)noisyImage.at<cv::Vec3b>(pos1 + 1, pos2)[0]);
+    blueVals.push_back((short)noisyImage.at<cv::Vec3b>(pos1 + 1, pos2 + 1)[0]);
 
-    std::cout << "Blue value of pixel at (" << pos1 - 1 << ", " << pos2 - 1 << "): " << (short)smoothedImage.at<cv::Vec3b>(pos1, pos2)[0] << std::endl;
+    std::cout << "Printing blue values of pixel at (500,500) and it's neighbors from NOISY IMAGE..." << std::endl;
+    for (std::vector<short>::iterator i = blueVals.begin(); i != blueVals.end(); i++)
+    {
+        std::cout << *i << std::endl;
+    }
 
-    std::cout << "Blue value of pixel at (" << pos1 - 1 << ", " << pos2 << "): " << (short)smoothedImage.at<cv::Vec3b>(pos1, pos2)[0] << std::endl;
+    // Calculate what you expect for the blurred pixel value.
 
-    std::cout << "Blue value of pixel at (" << pos1 - 1 << ", " << pos2 + 1 << "): " << (short)smoothedImage.at<cv::Vec3b>(pos1, pos2)[0] << std::endl;
-
-    std::cout << "Blue value of pixel at (" << pos1 << ", " << pos2 - 1 << "): " << (short)smoothedImage.at<cv::Vec3b>(pos1, pos2)[0] << std::endl;
-
-    std::cout << "Blue value of pixel at (" << pos1 << ", " << pos2 << "): " << (short)smoothedImage.at<cv::Vec3b>(pos1, pos2)[0] << std::endl;
-
-    std::cout << "Blue value of pixel at (" << pos1 << ", " << pos2 + 1 << "): " << (short)smoothedImage.at<cv::Vec3b>(pos1, pos2)[0] << std::endl;
-
-    std::cout << "Blue value of pixel at (" << pos1 + 1 << ", " << pos2 - 1 << "): " << (short)smoothedImage.at<cv::Vec3b>(pos1, pos2)[0] << std::endl;
-
-    std::cout << "Blue value of pixel at (" << pos1 + 1 << ", " << pos2 << "): " << (short)smoothedImage.at<cv::Vec3b>(pos1, pos2)[0] << std::endl;
-
-    std::cout << "Blue value of pixel at (" << pos1 + 1 << ", " << pos2 + 1 << "): " << (short)smoothedImage.at<cv::Vec3b>(pos1, pos2)[0] << std::endl;
-
-    // Calculate what you expect for the blurred pixel value. 
-
-    
+    std::cout.precision(15);
+    std::cout << "I predict that the blurred pixel value will be " << std::accumulate(blueVals.begin(), blueVals.end(), 0) << "/" << blueVals.size() << " = " << std::fixed << (std::accumulate(blueVals.begin(), blueVals.end(), (double)0) / blueVals.size()) << std::endl;
 
     // Then check the value for the blurred image. Are they the same?
 
+    blueVals.clear();
+
+    blueVals.push_back((short)smoothedImage.at<cv::Vec3b>(pos1 - 1, pos2 - 1)[0]);
+    blueVals.push_back((short)smoothedImage.at<cv::Vec3b>(pos1 - 1, pos2)[0]);
+    blueVals.push_back((short)smoothedImage.at<cv::Vec3b>(pos1 - 1, pos2 + 1)[0]);
+    blueVals.push_back((short)smoothedImage.at<cv::Vec3b>(pos1, pos2 - 1)[0]);
+    blueVals.push_back((short)smoothedImage.at<cv::Vec3b>(pos1, pos2)[0]);
+    blueVals.push_back((short)smoothedImage.at<cv::Vec3b>(pos1, pos2 + 1)[0]);
+    blueVals.push_back((short)smoothedImage.at<cv::Vec3b>(pos1 + 1, pos2 - 1)[0]);
+    blueVals.push_back((short)smoothedImage.at<cv::Vec3b>(pos1 + 1, pos2)[0]);
+    blueVals.push_back((short)smoothedImage.at<cv::Vec3b>(pos1 + 1, pos2 + 1)[0]);
+
+    std::cout << "\n\nPrinting blue values of pixel at (500,500) and it's neighbors from SMOOTHED IMAGE..." << std::endl;
+    for (std::vector<short>::iterator i = blueVals.begin(); i != blueVals.end(); i++)
+    {
+        std::cout << *i << std::endl;
+    }
+
     // e. Filter the above noisy image using a 3 x 3 bilinear filter and display the result.
 
+    cv::Mat filteredImage;
+    cv::Matx<float, 3, 3> myKernel = cv::Matx<float, 3, 3>::all(1 / 9.0f);
+    cv::filter2D(noisyImage, filteredImage, CV_8U, myKernel);
+    cv::imshow("box filtered image", filteredImage);
+    cv::waitKey(1000);
+
     // f. De-noise the noisy image using a median filter and display the resulting image.
+
+    cv::Mat medianFilteredImg;
+    cv::medianBlur(noisyImage, medianFilteredImg, 3);
+    cv::imshow("median filtered image", medianFilteredImg);
+    cv::waitKey(1000);
 
     // g. Compare the results of the above filters. Which filter works better for de-noising?
 
