@@ -58,13 +58,33 @@ int main()
     cv::imshow("smoothed image", smoothedImage);
     cv::waitKey(1000);
 
-    // d. Choose a pixel and output the pixel’s blue value, as well as its neighbors’. Calculate what you expect for the blurred pixel value. Then check the value for the blurred image. Are they the same?
-
-    // cv::Mat selectedPx = smoothedImage.at<double>(50, 50); // segmentation fault (core dumped)
+    // d. Choose a pixel and output the pixel’s blue value, as well as its neighbors’. 
 
     int pos1 = 500, pos2 = 500;
 
-    std::cout << "Blue value of pixel at (" << pos1 << ", " << pos2 << "): " << (short)smoothedImage.at<cv::Vec3b>(500, 500)[0] << std::endl;
+    std::cout << "Blue value of pixel at (" << pos1 - 1 << ", " << pos2 - 1 << "): " << (short)smoothedImage.at<cv::Vec3b>(pos1, pos2)[0] << std::endl;
+
+    std::cout << "Blue value of pixel at (" << pos1 - 1 << ", " << pos2 << "): " << (short)smoothedImage.at<cv::Vec3b>(pos1, pos2)[0] << std::endl;
+
+    std::cout << "Blue value of pixel at (" << pos1 - 1 << ", " << pos2 + 1 << "): " << (short)smoothedImage.at<cv::Vec3b>(pos1, pos2)[0] << std::endl;
+
+    std::cout << "Blue value of pixel at (" << pos1 << ", " << pos2 - 1 << "): " << (short)smoothedImage.at<cv::Vec3b>(pos1, pos2)[0] << std::endl;
+
+    std::cout << "Blue value of pixel at (" << pos1 << ", " << pos2 << "): " << (short)smoothedImage.at<cv::Vec3b>(pos1, pos2)[0] << std::endl;
+
+    std::cout << "Blue value of pixel at (" << pos1 << ", " << pos2 + 1 << "): " << (short)smoothedImage.at<cv::Vec3b>(pos1, pos2)[0] << std::endl;
+
+    std::cout << "Blue value of pixel at (" << pos1 + 1 << ", " << pos2 - 1 << "): " << (short)smoothedImage.at<cv::Vec3b>(pos1, pos2)[0] << std::endl;
+
+    std::cout << "Blue value of pixel at (" << pos1 + 1 << ", " << pos2 << "): " << (short)smoothedImage.at<cv::Vec3b>(pos1, pos2)[0] << std::endl;
+
+    std::cout << "Blue value of pixel at (" << pos1 + 1 << ", " << pos2 + 1 << "): " << (short)smoothedImage.at<cv::Vec3b>(pos1, pos2)[0] << std::endl;
+
+    // Calculate what you expect for the blurred pixel value. 
+
+    
+
+    // Then check the value for the blurred image. Are they the same?
 
     // e. Filter the above noisy image using a 3 x 3 bilinear filter and display the result.
 
