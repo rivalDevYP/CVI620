@@ -12,7 +12,7 @@ We, (Gabriella Ko, Patrick O'reilly, Yathavan Parameshwaran), declare that the a
 cv::Mat &generateNoise(cv::Mat &incomingImage, double incomingNoisePercentage)
 {
     int imageRows = incomingImage.rows;
-    int imageColumns = incomingImage.cols; 
+    int imageColumns = incomingImage.cols;
     int imageChannels = incomingImage.channels();
 
     int noisePoints = (int)(((double)imageRows * imageColumns * imageChannels) * incomingNoisePercentage / 100.0);
@@ -54,11 +54,17 @@ int main()
     // c. Smooth the above noisy image using a 3 x 3 box kernel. Display the blurred image.
 
     cv::Mat smoothedImage;
-    cv::blur(noisyImage, smoothedImage, cv::Size(3,3));
+    cv::blur(noisyImage, smoothedImage, cv::Size(3, 3));
     cv::imshow("smoothed image", smoothedImage);
     cv::waitKey(1000);
 
     // d. Choose a pixel and output the pixel’s blue value, as well as its neighbors’. Calculate what you expect for the blurred pixel value. Then check the value for the blurred image. Are they the same?
+
+    // cv::Mat selectedPx = smoothedImage.at<double>(50, 50); // segmentation fault (core dumped)
+
+    int pos1 = 500, pos2 = 500;
+
+    std::cout << "Blue value of pixel at (" << pos1 << ", " << pos2 << "): " << (short)smoothedImage.at<cv::Vec3b>(500, 500)[0] << std::endl;
 
     // e. Filter the above noisy image using a 3 x 3 bilinear filter and display the result.
 
