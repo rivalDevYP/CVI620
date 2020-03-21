@@ -1,4 +1,4 @@
-# Install script for directory: /home/yathavan/Documents/Semester6/SCHOOL/SEMESTER6/CVI620/LAB08
+# Install script for directory: /home/yathavan/Documents/Semester6/SCHOOL/SEMESTER6/CVI620/Labs/LAB08
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/yathavan/Documents/Semester6/SCHOOL/SEMESTER6/CVI620/LAB08/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/yathavan/Documents/Semester6/SCHOOL/SEMESTER6/CVI620/Labs/LAB08/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

@@ -6,8 +6,10 @@
 
 #IncludeRegexTransform: 
 
-/home/yathavan/Documents/Semester6/SCHOOL/SEMESTER6/CVI620/LAB08/Lab08.cpp
+/home/yathavan/Documents/Semester6/SCHOOL/SEMESTER6/CVI620/Labs/LAB08/Lab08.cpp
 iostream
+-
+string
 -
 opencv4/opencv2/opencv.hpp
 -
