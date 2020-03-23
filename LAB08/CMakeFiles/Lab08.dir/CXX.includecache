@@ -9,6 +9,8 @@
 /home/yathavan/Documents/Semester6/SCHOOL/SEMESTER6/CVI620/Labs/LAB08/Lab08.cpp
 iostream
 -
+fstream
+-
 string
 -
 opencv4/opencv2/opencv.hpp
@@ -18,5 +20,7 @@ opencv4/opencv2/highgui.hpp
 vector
 -
 numeric
+-
+cmath
 -
 

@@ -5,6 +5,7 @@ We, (Gabriella Ko, Patrick O'reilly, Yathavan Parameshwaran), declare that the a
 */
 
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <opencv4/opencv2/opencv.hpp>
 #include <opencv4/opencv2/highgui.hpp>
@@ -77,8 +78,8 @@ int calcPR(bool *pred, bool *gt, int len, double *P, double *R)
     // recall = tp / (tp + fn)
     // precision = tp / (tp + fp)
 
-    R = TP / (TP + FN);
-    P = TP / (TP + FP);
+    *R = TP / (TP + FN);
+    *P = TP / (TP + FP);
 
     return 0;
 }
@@ -93,6 +94,43 @@ double calcFb(double P, double R, double beta)
 /** read CSV files */
 void readCSV(std::string incomingFileName)
 {
+    /*
+        Write function(s) to read alg_bin.csv as the classifier predictions and gt.csv as the 
+        ground truth. In these files, each row belongs to a data sample. The value ‘1’ means 
+        belonging to the class (true), while ‘0’ means not belonging to the class (false).
+    */
+
+    std::ifstream alg_bin_csv("lab_files/alg_bin.csv");
+    std::ifstream gt_csv("lab_files/gt.csv");
+
+    // reading alg_bin.csv
+    std::vector<int> alg_bin_csv_data_vector;
+    std::vector<int> gt_csv_data_vector;
+
+    char readLine = '\0';
+
+    while (alg_bin_csv.is_open())
+    {
+        while (!alg_bin_csv.eof())
+        {
+            readLine = '\0';
+            alg_bin_csv.getline(readCSV, 1);
+            alg_bin_csv_data_vector.push_back(std::stoi(readLine));
+        }
+    }
+
+    while (gt_csv.is_open())
+    {
+        while (!gt_csv.eof())
+        {
+            readLine = '\0';
+            gt_csv.getline(readCSV, 1);
+            gt_csv_data_vector.push_back(std::stoi(readLine));
+        }
+    }
+
+    std::cout << "alg_bin.csv # of elements: " << alg_bin_csv_data_vector.size() << std::endl;
+    std::cout << "gt.csv # of elements: " << gt_csv_data_vector.size() << std::endl;
 }
 
 /** convert the response of a continuous classifier (A) to a Boolean response (B) given a threshold (thresh) */
@@ -129,6 +167,7 @@ int main()
     {
     case 1:
         std::cout << "you have selected option 1" << std::endl;
+        readCSV("pizza");
         break;
     case 2:
         std::cout << "you have selected option 2" << std::endl;
