@@ -13,6 +13,8 @@ We, (Gabriella Ko, Patrick O'reilly, Yathavan Parameshwaran), declare that the a
 #include <numeric>
 #include <cmath>
 
+int myFileLength = 0;
+
 /** calculate precision and recall for a binary classifier which classifies a target as belonging to a class (true) or not (false) */
 int calcPR(bool *pred, bool *gt, int len, double *P, double *R)
 {
@@ -55,8 +57,11 @@ int calcPR(bool *pred, bool *gt, int len, double *P, double *R)
 
     // loop through classifier predictions and ground truth classes
 
-    for (int index = 0; index < len; index++)
+    // std::cout << "reached" << std::endl;
+
+    for (int index = 0; index < 19; index++)
     {
+        std::cout << "reached" << std::endl;   
         if ((*(pred + index)) && !(*(gt + index)))
         {
             FP++;
@@ -92,7 +97,7 @@ double calcFb(double P, double R, double beta)
 }
 
 /** read CSV files (added by student) */
-void readCSV(std::string incomingFileName)
+bool *readCSV(std::string incomingFileName)
 {
     /*
         Write function(s) to read alg_bin.csv as the classifier predictions and gt.csv as the 
@@ -101,21 +106,39 @@ void readCSV(std::string incomingFileName)
     */
 
     std::ifstream csv_file(incomingFileName);
-    std::vector<int> csv_data_vector;
 
-    char readLine = '\0';
+    int i = 0;
+    bool readLine = '\0';
 
+    // read the file to get length of the file
     if (csv_file.is_open())
     {
         while (!csv_file.eof())
         {
             csv_file >> readLine;
-            csv_data_vector.push_back((int)readLine);
-            readLine = '\0';
+            myFileLength++;
         }
     }
 
-    std::cout << "# of elements in " << incomingFileName << ": " << csv_data_vector.size() << std::endl;
+    myFileLength = myFileLength - 1; // because of the extra blank line in the file
+
+    // initialize array to store file's data
+    bool fileData[myFileLength];
+
+    // go back to beginning of file
+    csv_file.clear();
+    csv_file.seekg(0, std::ios::beg);
+
+    // read file again, this time storing the data in the array
+    if (csv_file.is_open())
+    {
+        for (int i = 0; i < myFileLength; i++)
+        {
+            csv_file >> fileData[i];
+        }
+    }
+
+    return &fileData[0];
 }
 
 /** convert the response of a continuous classifier (A) to a Boolean response (B) given a threshold (thresh) */
@@ -132,6 +155,15 @@ void readResponse()
 /** converts an image to a Boolean array. If the pixel value is more than a threshold, convert it to true; otherwise, convert to false */
 void thresh_img(cv::Mat img, bool *B, double thresh)
 {
+}
+
+void evalBinClass()
+{
+    double P, R;
+    if (calcPR(readCSV("alg_bin.csv"), readCSV("gt.csv"), myFileLength, &P, &R))
+    {
+        std::cout << "Part I: F1= " << calcFb(P, R, 1) << std::endl;
+    }
 }
 
 int main()
@@ -151,9 +183,7 @@ int main()
     switch (userSelection)
     {
     case 1:
-        std::cout << "you have selected option 1" << std::endl;
-        readCSV("alg_bin.csv");
-        readCSV("gt.csv");
+        evalBinClass();
         break;
     case 2:
         std::cout << "you have selected option 2" << std::endl;
