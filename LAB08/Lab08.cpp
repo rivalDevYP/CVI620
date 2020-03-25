@@ -51,49 +51,57 @@ int calcPR(bool *pred, bool *gt, int len, double *P, double *R)
     // FN (false negatives):
     //     Number of samples identified incorrectly as NOT belonging to a class/ category
 
-    // Total number of samples = TP + FP + TN + FN
-
-    int TP{0}, FP{0}, TN{0}, FN{0};
-
-    // loop through classifier predictions and ground truth classes
-
-    // std::cout << "reached" << std::endl;
-
-    for (int index = 0; index < 19; index++)
+    try
     {
-        std::cout << "reached" << std::endl;   
-        if ((*(pred + index)) && !(*(gt + index)))
+        // Total number of samples = TP + FP + TN + FN
+
+        int TP{0}, FP{0}, TN{0}, FN{0};
+
+        // loop through classifier predictions and ground truth classes
+
+        // std::cout << "reached" << std::endl;
+
+        for (int index = 0; index < 19; index++)
         {
-            FP++;
+            if ((*(pred + index)) && !(*(gt + index)))
+            {
+                FP++;
+            }
+            if ((*(pred + index)) && (*(gt + index)))
+            {
+                TP++;
+            }
+            if (!(*(pred + index)) && (*(gt + index)))
+            {
+                TN++;
+            }
+            if (!(*(pred + index)) && !(*(gt + index)))
+            {
+                FN++;
+            }
         }
-        if ((*(pred + index)) && (*(gt + index)))
-        {
-            TP++;
-        }
-        if (!(*(pred + index)) && (*(gt + index)))
-        {
-            TN++;
-        }
-        if (!(*(pred + index)) && !(*(gt + index)))
-        {
-            FN++;
-        }
+
+        // recall = tp / (tp + fn)
+        // precision = tp / (tp + fp)
+
+        *R = (double) TP / (TP + FN);
+        *P = (double) TP / (TP + FP);
+
+        return 1;
     }
-
-    // recall = tp / (tp + fn)
-    // precision = tp / (tp + fp)
-
-    *R = TP / (TP + FN);
-    *P = TP / (TP + FP);
-
-    return 0;
+    catch (...)
+    {
+        return 0;
+    }
 }
 
 /** calculate Fβ */
 double calcFb(double P, double R, double beta)
 {
     // Fβ = (1 + (β^2)) * (P*R) / ((β^2) * P) + R
-    return (1 + pow(beta, 2)) * (P * R) / (pow(beta, 2) * P) + R;
+    double answer = (1 + pow(beta, 2)) * (P * R) / (pow(beta, 2) * P) + R;
+
+    return answer;
 }
 
 /** read CSV files (added by student) */
@@ -123,7 +131,7 @@ bool *readCSV(std::string incomingFileName)
     myFileLength = myFileLength - 1; // because of the extra blank line in the file
 
     // initialize array to store file's data
-    bool fileData[myFileLength];
+    static bool fileData[20];
 
     // go back to beginning of file
     csv_file.clear();
@@ -138,7 +146,7 @@ bool *readCSV(std::string incomingFileName)
         }
     }
 
-    return &fileData[0];
+    return fileData;
 }
 
 /** convert the response of a continuous classifier (A) to a Boolean response (B) given a threshold (thresh) */
@@ -160,10 +168,25 @@ void thresh_img(cv::Mat img, bool *B, double thresh)
 void evalBinClass()
 {
     double P, R;
-    if (calcPR(readCSV("alg_bin.csv"), readCSV("gt.csv"), myFileLength, &P, &R))
+    if (calcPR(readCSV("alg_bin.csv"), readCSV("gt.csv"), 20, &P, &R))
     {
-        std::cout << "Part I: F1= " << calcFb(P, R, 1) << std::endl;
+        std::cout << "Part I: F1= " << std::fixed << std::setprecision(4) << calcFb(P, R, 1) << std::endl;
     }
+}
+
+void evalBinContRes()
+{
+
+}
+
+void evalImgBasClass()
+{
+
+}
+
+void evalImgBasClassContRes()
+{
+    
 }
 
 int main()
@@ -178,6 +201,7 @@ int main()
               << "\n(5) Exit Program"
               << std::endl;
 
+    std::cout << "Please enter a selection: ";
     std::cin >> userSelection;
 
     switch (userSelection)
@@ -186,17 +210,17 @@ int main()
         evalBinClass();
         break;
     case 2:
-        std::cout << "you have selected option 2" << std::endl;
+        evalBinContRes();
         break;
     case 3:
-        std::cout << "you have selected option 3" << std::endl;
+        evalImgBasClass();
         break;
     case 4:
-        std::cout << "you have selected option 4" << std::endl;
+        evalImgBasClassContRes();
         break;
     case 5:
-        std::cout << "you have selected option 5" << std::endl;
-        break;
+        std::cout << "exiting program" << std::endl;
+        exit(0);
     default:
         std::cout << "You have entered an incorrect option...\n";
         break;
