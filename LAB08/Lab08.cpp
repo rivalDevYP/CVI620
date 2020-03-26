@@ -1,7 +1,7 @@
-// We, (Gabriella Ko, Patrick O'reilly, Yathavan Parameshwaran), declare that the attached 
-// assignment is our own work in accordance with the Seneca Academic Policy. We have not 
-// copied any part of this assignment, manually or electronically, from any other source 
-// including web sites, unless specified as references. We have not distributed our work 
+// We, (Gabriella Ko, Patrick O'reilly, Yathavan Parameshwaran), declare that the attached
+// assignment is our own work in accordance with the Seneca Academic Policy. We have not
+// copied any part of this assignment, manually or electronically, from any other source
+// including web sites, unless specified as references. We have not distributed our work
 // to other students.
 
 #include <iostream>
@@ -18,36 +18,12 @@ int myFileLength = 0;
 /** calculate precision and recall for a binary classifier which classifies a target as belonging to a class (true) or not (false) */
 int calcPR(bool *pred, bool *gt, int len, double *P, double *R)
 {
-    // Inputs:
-    //      pred: pointer to classifier predictions
-    //      gt: pointer to ground truth classes
-    //          ground truth: perfect answer
-    //      len: length of pred and gt arrays
-    // Outputs:
-    //      P: pointer to return precision
-    //      R: pointer to return recall
-    //
-    //      Return 1 if successful, 0 otherwise
-
-    // TP (true positives):
-    //     Number of samples identified correctly as belonging to a class/ category
-    // FP (false positive): (false alarms!)
-    //     Number of samples identified incorrectly as belonging to a class / category
-    // TN (true negative):
-    //     Number of samples identified correctly as NOT belonging to a class/ category
-    // FN (false negatives):
-    //     Number of samples identified incorrectly as NOT belonging to a class/ category
-
     try
     {
         // Total number of samples = TP + FP + TN + FN
-
         int TP{0}, FP{0}, TN{0}, FN{0};
 
         // loop through classifier predictions and ground truth classes
-
-        // std::cout << "reached" << std::endl;
-
         for (int index = 0; index < len; index++)
         {
             if ((*(pred + index)) && !(*(gt + index)))
@@ -138,14 +114,11 @@ void readResponse()
 void thresh_img(cv::Mat img, bool *B, double thresh)
 {
     // *(B + j) = (*(A + j) > thresh);
-    for (int k = 0; k < 10; k++)
+    for (int j = 0; j < img.rows; j++)
     {
-        for (int j = 0; j < 10; j++)
+        for (int i = 0; i < img.cols; i++)
         {
-            for (int i = 0; i < 10; i++)
-            {
-                
-            }
+            *(B++) = (img.at<uchar>(i, j) > thresh);
         }
     }
 }
@@ -188,19 +161,19 @@ void option_2()
 
     bool *ptr1 = new bool[csv_len];
     bool *ptr2 = new bool[csv_len];
-    double *threshold_arr_ptr = new double[csv_len];
+    double *continuous_response_ptr = new double[csv_len];
 
     std::ofstream pr_csv_file;
     pr_csv_file.open("PR.csv");
 
     readBooleanCSV("alg_bin.csv", ptr1);
     readBooleanCSV("gt.csv", ptr2);
-    readDoubleDSV("alg_dbl.csv", threshold_arr_ptr);
+    readDoubleDSV("alg_dbl.csv", continuous_response_ptr);
 
     for (int index = 0; index < thres_len; index++)
     {
-        thresh_v(threshold_arr_ptr, ptr1, thres_len, threshold[index]);
-        thresh_v(threshold_arr_ptr, ptr2, thres_len, threshold[index]);
+        thresh_v(continuous_response_ptr, ptr1, csv_len, threshold[index]);
+        // thresh_v(continuous_response_ptr, ptr2, csv_len, threshold[index]);
         if (calcPR(ptr1, ptr2, csv_len, &P, &R))
         {
             double fb = calcFb(P, R, 1);
@@ -214,14 +187,14 @@ void option_2()
         else
         {
             std::cout << "Error calculating PR..." << std::endl;
-        }        
+        }
     }
 
     std::cout << "Part II: max F1 = " << F1 << " at threshold = " << selectedThreshold << std::endl;
 
     delete[] ptr1;
     delete[] ptr2;
-    delete[] threshold_arr_ptr;
+    delete[] continuous_response_ptr;
 }
 
 // Part III: Evaluating image-based classifiers
@@ -232,15 +205,76 @@ void option_3()
 
     int numberOfPixels = bitmap_A1.total() > bitmap_gt.total() ? bitmap_A1.total() : bitmap_gt.total(); // go for whichever is higher...
 
-    bool* bitmap_A1_arr = new bool[numberOfPixels];
-    bool* bitmap_gt_arr = new bool[numberOfPixels];
+    bool *bitmap_A1_arr = new bool[numberOfPixels];
+    bool *bitmap_gt_arr = new bool[numberOfPixels];
 
+    thresh_img(bitmap_A1, bitmap_A1_arr, 128);
+    thresh_img(bitmap_gt, bitmap_gt_arr, 128);
 
+    double P{0.0}, R{0.0};
+
+    if (calcPR(bitmap_A1_arr, bitmap_gt_arr, numberOfPixels, &P, &R))
+    {
+        std::cout << "Part III: F1 = " << calcFb(P, R, 1) << std::endl;
+    }
+
+    delete[] bitmap_A1_arr;
+    delete[] bitmap_gt_arr;
 }
 
 // Part IV: Evaluating image-based classifiers with continuous responses
 void option_4()
 {
+    cv::Mat bitmap_A2 = cv::imread("bitmap_A2.png", cv::IMREAD_GRAYSCALE);
+    int numPixels = bitmap_A2.total();
+    int csv_len = 20;
+
+    bool *bitmap_A2_arr = new bool[numPixels];
+    bool *ptr2 = new bool[numPixels];
+    double *continuous_response_ptr = new double[20];
+
+    thresh_img(bitmap_A2, bitmap_A2_arr, 128);
+    
+    readBooleanCSV("gt.csv", ptr2);
+    readDoubleDSV("alg_dbl.csv", continuous_response_ptr);
+
+    std::ofstream pr_img_csv_file;
+    pr_img_csv_file.open("PR_img.csv");
+
+    std::vector<double> thresholdVec;
+
+    double i{0.0}, P{0.0}, R{0.0}, F1{0.0}, selectedThreshold{0.0};
+
+    while (i <= 250)
+    {
+        thresholdVec.push_back(i += 25);
+    }
+
+    for (int index = 0; index < thresholdVec.size(); index++)
+    {
+        thresh_v(continuous_response_ptr, bitmap_A2_arr, 20, thresholdVec.at(index));
+        // thresh_v(continuous_response_ptr, ptr2, thresholdVec.size(), thresholdVec.at(index));
+        if (bitmap_A2_arr, ptr2, numPixels, &P, &R)
+        {
+            double fb = calcFb(P, R, 1);
+            pr_img_csv_file << fb << "," << thresholdVec.at(index) << std::endl;
+            if (fb > F1)
+            {
+                F1 = fb;
+                selectedThreshold = thresholdVec.at(index);
+            }
+        }
+        else
+        {
+            std::cout << "Error calculating PR..." << std::endl;
+        }
+    }
+
+    std::cout << "Part II: max F1 = " << F1 << " at threshold = " << selectedThreshold << std::endl;
+
+    delete[] bitmap_A2_arr;
+    delete[] ptr2;
+    delete[] continuous_response_ptr;
 }
 
 int main()
