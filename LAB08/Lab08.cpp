@@ -105,15 +105,10 @@ void thresh_v(double *A, bool *B, int len, double thresh)
     }
 }
 
-/** Write a function to read the continuous response in alg_dbl.csv */
-void readResponse()
-{
-}
 
 /** converts an image to a Boolean array. If the pixel value is more than a threshold, convert it to true; otherwise, convert to false */
 void thresh_img(cv::Mat img, bool *B, double thresh)
 {
-    // *(B + j) = (*(A + j) > thresh);
     for (int j = 0; j < img.rows; j++)
     {
         for (int i = 0; i < img.cols; i++)
@@ -201,19 +196,17 @@ void option_2()
 void option_3()
 {
     cv::Mat bitmap_A1 = cv::imread("bitmap_A1.png", cv::IMREAD_GRAYSCALE);
-    cv::Mat bitmap_gt = cv::imread("bitmap_gt.png", cv::IMREAD_GRAYSCALE);
+    cv::Mat bitmap_gt = cv::imread("bitmap_gt.png");
 
-    int numberOfPixels = bitmap_A1.total() > bitmap_gt.total() ? bitmap_A1.total() : bitmap_gt.total(); // go for whichever is higher...
-
-    bool *bitmap_A1_arr = new bool[numberOfPixels];
-    bool *bitmap_gt_arr = new bool[numberOfPixels];
+    bool *bitmap_A1_arr = new bool[bitmap_A1.total()];
+    bool *bitmap_gt_arr = new bool[bitmap_gt.total()];
 
     thresh_img(bitmap_A1, bitmap_A1_arr, 128);
     thresh_img(bitmap_gt, bitmap_gt_arr, 128);
 
     double P{0.0}, R{0.0};
 
-    if (calcPR(bitmap_A1_arr, bitmap_gt_arr, numberOfPixels, &P, &R))
+    if (calcPR(bitmap_A1_arr, bitmap_gt_arr, bitmap_A1.total(), &P, &R))
     {
         std::cout << "Part III: F1 = " << calcFb(P, R, 1) << std::endl;
     }
@@ -234,7 +227,7 @@ void option_4()
     double *continuous_response_ptr = new double[20];
 
     thresh_img(bitmap_A2, bitmap_A2_arr, 128);
-    
+
     readBooleanCSV("gt.csv", ptr2);
     readDoubleDSV("alg_dbl.csv", continuous_response_ptr);
 
