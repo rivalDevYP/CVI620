@@ -1,8 +1,8 @@
-/*
-
-We, (Gabriella Ko, Patrick O'reilly, Yathavan Parameshwaran), declare that the attached assignment is our own work in accordance with the Seneca Academic Policy. We have not copied any part of this assignment, manually or electronically, from any other source including web sites, unless specified as references. We have not distributed our work to other students.
-
-*/
+// We, (Gabriella Ko, Patrick O'reilly, Yathavan Parameshwaran), declare that the attached 
+// assignment is our own work in accordance with the Seneca Academic Policy. We have not 
+// copied any part of this assignment, manually or electronically, from any other source 
+// including web sites, unless specified as references. We have not distributed our work 
+// to other students.
 
 #include <iostream>
 #include <fstream>
@@ -138,6 +138,16 @@ void readResponse()
 void thresh_img(cv::Mat img, bool *B, double thresh)
 {
     // *(B + j) = (*(A + j) > thresh);
+    for (int k = 0; k < 10; k++)
+    {
+        for (int j = 0; j < 10; j++)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                
+            }
+        }
+    }
 }
 
 // Part I: Evaluating a binary classifier
@@ -170,43 +180,27 @@ void option_1()
 // Part II: Evaluating a binary classifier with a continuous response
 void option_2()
 {
+    const int csv_len{20};
+    const int thres_len{9};
 
-    // Note from Professor
-    // *******************
-
-    // Hi Yathavan,
-
-    // Please see the comments in the lab instructions. You want to check
-    // every element in array A and see if it is more than a threshold or
-    // not. If it is, you set the corresponding element in B to TRUE,
-    // otherwise to FALSE. It seems like you have already done that, so
-    // just put that in the thresh_v function. Then call it for applying
-    // to the array read from alg_dbl.csv.
-
-    // Please let me know if you are still stuck.
-    // Cheers,
-    // Vida
-
-    const int csv_len = 20;
-    const int thres_len = 9;
-
-    double F1 = 0.0, threshold[thres_len] = {0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9}, P = 0, R = 0, selectedThreshold;
+    double F1{0.0}, P{0}, R{0}, selectedThreshold{0.0};
+    double threshold[thres_len] = {0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9};
 
     bool *ptr1 = new bool[csv_len];
     bool *ptr2 = new bool[csv_len];
-    double *ptr3 = new double[csv_len];
+    double *threshold_arr_ptr = new double[csv_len];
 
     std::ofstream pr_csv_file;
     pr_csv_file.open("PR.csv");
 
     readBooleanCSV("alg_bin.csv", ptr1);
     readBooleanCSV("gt.csv", ptr2);
-    readDoubleDSV("alg_dbl.csv", ptr3);
+    readDoubleDSV("alg_dbl.csv", threshold_arr_ptr);
 
     for (int index = 0; index < thres_len; index++)
     {
-        thresh_v(ptr3, ptr1, thres_len, threshold[index]);
-        thresh_v(ptr3, ptr2, thres_len, threshold[index]);
+        thresh_v(threshold_arr_ptr, ptr1, thres_len, threshold[index]);
+        thresh_v(threshold_arr_ptr, ptr2, thres_len, threshold[index]);
         if (calcPR(ptr1, ptr2, csv_len, &P, &R))
         {
             double fb = calcFb(P, R, 1);
@@ -219,21 +213,29 @@ void option_2()
         }
         else
         {
-            std::cout << "BUG" << std::endl;
-        }
-        
+            std::cout << "Error calculating PR..." << std::endl;
+        }        
     }
 
     std::cout << "Part II: max F1 = " << F1 << " at threshold = " << selectedThreshold << std::endl;
 
     delete[] ptr1;
     delete[] ptr2;
-    delete[] ptr3;
+    delete[] threshold_arr_ptr;
 }
 
 // Part III: Evaluating image-based classifiers
 void option_3()
 {
+    cv::Mat bitmap_A1 = cv::imread("bitmap_A1.png", cv::IMREAD_GRAYSCALE);
+    cv::Mat bitmap_gt = cv::imread("bitmap_gt.png", cv::IMREAD_GRAYSCALE);
+
+    int numberOfPixels = bitmap_A1.total() > bitmap_gt.total() ? bitmap_A1.total() : bitmap_gt.total(); // go for whichever is higher...
+
+    bool* bitmap_A1_arr = new bool[numberOfPixels];
+    bool* bitmap_gt_arr = new bool[numberOfPixels];
+
+
 }
 
 // Part IV: Evaluating image-based classifiers with continuous responses
