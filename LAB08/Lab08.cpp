@@ -172,7 +172,7 @@ void option_2()
         if (calcPR(ptr1, ptr2, csv_len, &P, &R))
         {
             double fb = calcFb(P, R, 1);
-            pr_csv_file << fb << "," << threshold[index] << std::endl;
+            pr_csv_file << P << "," << R << std::endl;
             if (fb > F1)
             {
                 F1 = fb;
@@ -195,12 +195,15 @@ void option_2()
 // Part III: Evaluating image-based classifiers
 void option_3()
 {
+    // opening png images
     cv::Mat bitmap_A1 = cv::imread("bitmap_A1.png", cv::IMREAD_GRAYSCALE);
-    cv::Mat bitmap_gt = cv::imread("bitmap_gt.png");
+    cv::Mat bitmap_gt = cv::imread("bitmap_gt.png", cv::IMREAD_GRAYSCALE);
 
+    // boolean arrays that store binary arrays of above images
     bool *bitmap_A1_arr = new bool[bitmap_A1.total()];
     bool *bitmap_gt_arr = new bool[bitmap_gt.total()];
 
+    // picture to binary arr with threshold of 128
     thresh_img(bitmap_A1, bitmap_A1_arr, 128);
     thresh_img(bitmap_gt, bitmap_gt_arr, 128);
 
@@ -263,7 +266,7 @@ void option_4()
         }
     }
 
-    std::cout << "Part II: max F1 = " << F1 << " at threshold = " << selectedThreshold << std::endl;
+    std::cout << "Part IV: max F1 = " << F1 << " at threshold = " << selectedThreshold << std::endl;
 
     delete[] bitmap_A2_arr;
     delete[] ptr2;
