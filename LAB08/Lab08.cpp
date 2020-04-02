@@ -47,12 +47,15 @@ int calcPR(bool *pred, bool *gt, int len, double *P, double *R)
 		// recall = tp / (tp + fn)
 		// precision = tp / (tp + fp)
 
-		// printf("\nTP = %d\nFP = %d\nTN = %d\nFN = %d\n", TP, FP, TN, FN);
-
 		*R = (double)TP / (TP + FN);
-		*P = (double)TP / (TP + FP);
-
-
+		if (TP == 0 && FP == 0)
+		{
+			*P = (double)1;
+		}
+		else
+		{
+			*P = (double)TP / (TP + FP);
+		}
 
 		return 1;
 	}
@@ -109,17 +112,14 @@ void thresh_v(double *A, bool *B, int len, double thresh)
 	}
 }
 
-
 /** converts an image to a Boolean array. If the pixel value is more than a threshold, convert it to true; otherwise, convert to false */
 void thresh_img(cv::Mat img, bool *B, double thresh)
 {
-	int k = 0;
 	for (int j = 0; j < img.rows; j++)
 	{
 		for (int i = 0; i < img.cols; i++)
 		{
-			*(B + k) = (img.at<uchar>(i, j) > thresh);
-			k++;
+			*(B++) = (img.at<uchar>(j, i) > thresh);
 		}
 	}
 }
@@ -139,12 +139,12 @@ void option_1()
 	if (calcPR(ptr1, ptr2, len, &P, &R))
 	{
 		std::cout << "Part I: F1= " << std::fixed << std::setprecision(4) << calcFb(P, R, 1) << "\n\n"
-			<< std::endl;
+				  << std::endl;
 	}
 	else
 	{
 		std::cout << "\nerror while performing evaluation...\n"
-			<< std::endl;
+				  << std::endl;
 	}
 
 	delete[] ptr1;
@@ -207,9 +207,6 @@ void option_3()
 	cv::Mat bitmap_A1 = cv::imread("bitmap_A1.png", cv::IMREAD_GRAYSCALE);
 	cv::Mat bitmap_gt = cv::imread("bitmap_gt.png", cv::IMREAD_GRAYSCALE);
 
-	// printf("\nbitmap_A1: totalRows{%d} rows{%d} cols{%d}\n", bitmap_A1.total(), bitmap_A1.rows, bitmap_A1.cols);
-	// printf("\nbitmap_gt: totalRows{%d} rows{%d} cols{%d}\n", bitmap_gt.total(), bitmap_gt.rows, bitmap_gt.cols);
-
 	// boolean arrays that store binary arrays of above images
 	bool *bitmap_A1_arr = new bool[bitmap_A1.total()];
 	bool *bitmap_gt_arr = new bool[bitmap_gt.total()];
@@ -232,56 +229,65 @@ void option_3()
 // Part IV: Evaluating image-based classifiers with continuous responses
 void option_4()
 {
+	const int csv_len = 20;
+	const int threshold_val_len = 10;
+
+	const double threshVal_A2 = 125.00;
+	const double threshVal_GT = 128.00;
+
+	double F1 = 0.0, selectThresh = 0.0, P = 0.0, R = 0.0;
+
+	double thresholdValues[threshold_val_len];
+	double *cont_res_ptr = new double[csv_len];
+
 	cv::Mat bitmap_A2 = cv::imread("bitmap_A2.png", cv::IMREAD_GRAYSCALE);
-	int numPixels = bitmap_A2.total();
-	int csv_len = 20;
+	cv::Mat bitmap_GT = cv::imread("bitmap_gt.png", cv::IMREAD_GRAYSCALE);
 
-	bool *bitmap_A2_arr = new bool[numPixels];
-	bool *ptr2 = new bool[numPixels];
-	double *continuous_response_ptr = new double[20];
+	bool *bitmap_A2_arr = new bool[bitmap_A2.total()];
+	bool *bitmap_GT_arr = new bool[bitmap_GT.total()];
 
-	thresh_img(bitmap_A2, bitmap_A2_arr, 128);
+	thresh_img(bitmap_A2, bitmap_A2_arr, threshVal_A2);
+	thresh_img(bitmap_GT, bitmap_GT_arr, threshVal_GT);
 
-	readBooleanCSV("gt.csv", ptr2);
-	readDoubleCSV("alg_dbl.csv", continuous_response_ptr);
+	readDoubleCSV("alg_dbl.csv", cont_res_ptr);
 
+	// open PR_img.csv file
 	std::ofstream pr_img_csv_file;
-	pr_img_csv_file.open("PR_img.csv");
+	pr_img_csv_file.open("PR_img");
 
-	std::vector<double> thresholdVec;
-
-	double i = 0.0, P = 0.0, R = 0.0, F1 = 0.0, selectedThreshold = 0.0;
-
-	while (i <= 250)
+	// fill in thresholdValues array with values 25:250, increment:25
+	for (int index = 1; index <= threshold_val_len; index++)
 	{
-		thresholdVec.push_back(i += 25);
+		thresholdValues[index] = (double)index * 25;
 	}
 
-	for (int index = 0; index < thresholdVec.size(); index++)
+	try
 	{
-		thresh_v(continuous_response_ptr, bitmap_A2_arr, 20, thresholdVec.at(index));
-		// thresh_v(continuous_response_ptr, ptr2, thresholdVec.size(), thresholdVec.at(index));
-		if (bitmap_A2_arr, ptr2, numPixels, &P, &R)
+		for (int juggernaut = 0; juggernaut < threshold_val_len; juggernaut++)
 		{
-			double fb = calcFb(P, R, 1);
-			pr_img_csv_file << fb << "," << thresholdVec.at(index) << std::endl;
-			if (fb > F1)
+			// thresh_v(cont_res_ptr, bitmap_A2_arr, csv_len, thresholdValues[juggernaut]);
+			if (calcPR(bitmap_A2_arr, bitmap_GT_arr, 125, &P, &R))
 			{
-				F1 = fb;
-				selectedThreshold = thresholdVec.at(index);
+				double FB = calcFb(P, R, 1);
+				std::cout << P << "," << R << std::endl;
+				if (FB > F1)
+				{
+					F1 = FB;
+					selectThresh = thresholdValues[juggernaut];
+				}
 			}
 		}
-		else
-		{
-			std::cout << "Error calculating PR..." << std::endl;
-		}
+	}
+	catch (...)
+	{
+		std::cout << "Part IV: max F1 = " << F1 << " at max threshold = " << threshVal_A2 << std::endl;
 	}
 
-	std::cout << "Part IV: max F1 = " << F1 << " at threshold = " << selectedThreshold << std::endl;
+	std::cout << "Part IV: max F1 = " << F1 << " at max threshold = " << selectThresh << std::endl;
 
 	delete[] bitmap_A2_arr;
-	delete[] ptr2;
-	delete[] continuous_response_ptr;
+	delete[] bitmap_GT_arr;
+	delete[] cont_res_ptr;
 }
 
 int main()
@@ -292,35 +298,35 @@ int main()
 
 		std::cout << "Please select one of the following options: " << std::endl;
 		std::cout << "\n(1) Evaluating a binary classifier"
-			<< "\n(2) Evaluating a binary classifier with a continuous response"
-			<< "\n(3) Evaluating image-based classifiers"
-			<< "\n(4) Evaluating image-based classifiers with continuous responses"
-			<< "\n(5) Exit Program"
-			<< std::endl;
+				  << "\n(2) Evaluating a binary classifier with a continuous response"
+				  << "\n(3) Evaluating image-based classifiers"
+				  << "\n(4) Evaluating image-based classifiers with continuous responses"
+				  << "\n(5) Exit Program"
+				  << std::endl;
 
 		std::cout << "Please enter a selection: ";
 		std::cin >> userSelection;
 
 		switch (userSelection)
 		{
-			case 1:
-				option_1();
-				break;
-			case 2:
-				option_2();
-				break;
-			case 3:
-				option_3();
-				break;
-			case 4:
-				option_4();
-				break;
-			case 5:
-				std::cout << "exiting program" << std::endl;
-				exit(0);
-			default:
-				std::cout << "You have entered an incorrect option...\n";
-				break;
+		case 1:
+			option_1();
+			break;
+		case 2:
+			option_2();
+			break;
+		case 3:
+			option_3();
+			break;
+		case 4:
+			option_4();
+			break;
+		case 5:
+			std::cout << "exiting program" << std::endl;
+			exit(0);
+		default:
+			std::cout << "You have entered an incorrect option...\n";
+			break;
 		}
 
 		fflush(stdin);
