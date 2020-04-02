@@ -1,0 +1,177 @@
+calcPR
+******
+
+int calcPR(bool *pred, bool *gt, int len, double *P, double *R)
+{
+        try
+        {
+                // Total number of samples = TP + FP + TN + FN
+                int TP = 0, FP = 0, TN = 0, FN = 0;
+
+                // loop through classifier predictions and ground truth classes
+                for (int index = 0; index < len; index++)
+                {
+                        if ((*(pred + index)) && !(*(gt + index)))
+                        {
+                                FP++;
+                        }
+                        else if ((*(pred + index)) && (*(gt + index)))
+                        {
+                                TP++;
+                        }
+                        else if (!(*(pred + index)) && (*(gt + index)))
+                        {
+                                FN++;
+                        }
+                        else if (!(*(pred + index)) && !(*(gt + index)))
+                        {
+                                TN++;
+                        }
+                }
+
+                // recall = tp / (tp + fn)
+                // precision = tp / (tp + fp)
+
+                // printf("\nTP = %d\nFP = %d\nTN = %d\nFN = %d\n", TP, FP, TN, FN);
+
+                *R = (double)TP / (TP + FN);
+                *P = (double)TP / (TP + FP);
+
+
+
+                return 1;
+        }
+        catch (...)
+        {
+                return 0;
+        }
+}
+
+
+calcFB
+******
+
+double calcFb(double P, double R, double beta)
+{
+        // Fβ = (1 + (β^2)) * (P*R) / ((β^2) * P) + R
+        return (1 + pow(beta, 2)) * ((P * R) / ((pow(beta, 2) * P) + R));
+}
+
+
+thresh_img
+**********
+
+void thresh_img(cv::Mat img, bool *B, double thresh)
+{
+        for (int j = 0; j < img.rows; j++)
+        {
+                for (int i = 0; i < img.cols; i++)
+                {
+                        *(B++) = (img.at<uchar>(i, j) > thresh);
+                }
+        }
+}
+
+
+option_3
+********
+
+// Part III: Evaluating image-based classifiers
+void option_3()
+{
+
+        // opening png images
+        cv::Mat bitmap_A1 = cv::imread("bitmap_A1.png", cv::IMREAD_GRAYSCALE);
+        cv::Mat bitmap_gt = cv::imread("bitmap_gt.png", cv::IMREAD_GRAYSCALE);
+
+        // boolean arrays that store binary arrays of above images
+        bool *bitmap_A1_arr = new bool[bitmap_A1.total()];
+        bool *bitmap_gt_arr = new bool[bitmap_gt.total()];
+
+        double threshVal = 128.00;
+
+        // picture to binary arr with threshold of 128
+        thresh_img(bitmap_A1, bitmap_A1_arr, threshVal);
+        thresh_img(bitmap_gt, bitmap_gt_arr, threshVal);
+
+        double P = 0.0, R = 0.0;
+
+        if (calcPR(bitmap_A1_arr, bitmap_gt_arr, bitmap_A1.total(), &P, &R))
+        {
+                /* BUG
+                 * 
+                 * currently prints     0.67642 (value changes every time?)
+                 * supposed to print    0.794
+                 *
+                 */
+                std::cout << "Part III: F1 = " << std::fixed << std::setprecision(4) << calcFb(P, R, 1) << std::endl;
+        }
+
+        delete[] bitmap_A1_arr;
+        delete[] bitmap_gt_arr;
+}
+
+
+
+
+
+OUTPUT
+******
+
+[yathavan@lonetech LAB08]$ cmake . && make && ./Lab08
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/yathavan/Documents/Semester6/SCHOOL/SEMESTER6/CVI620/Labs/LAB08
+make[1]: Entering directory '/home/yathavan/Documents/Semester6/SCHOOL/SEMESTER6/CVI620/Labs/LAB08'
+make[2]: Entering directory '/home/yathavan/Documents/Semester6/SCHOOL/SEMESTER6/CVI620/Labs/LAB08'
+make[2]: Leaving directory '/home/yathavan/Documents/Semester6/SCHOOL/SEMESTER6/CVI620/Labs/LAB08'
+[100%] Built target Lab08
+make[1]: Leaving directory '/home/yathavan/Documents/Semester6/SCHOOL/SEMESTER6/CVI620/Labs/LAB08'
+Please select one of the following options: 
+
+(1) Evaluating a binary classifier
+(2) Evaluating a binary classifier with a continuous response
+(3) Evaluating image-based classifiers
+(4) Evaluating image-based classifiers with continuous responses
+(5) Exit Program
+Please enter a selection: 1
+Part I: F1= 0.4000
+
+
+Please select one of the following options: 
+
+(1) Evaluating a binary classifier
+(2) Evaluating a binary classifier with a continuous response
+(3) Evaluating image-based classifiers
+(4) Evaluating image-based classifiers with continuous responses
+(5) Exit Program
+Please enter a selection: 2
+Part II: max F1 = 0.8571 at threshold = 0.5000
+Please select one of the following options: 
+
+(1) Evaluating a binary classifier
+(2) Evaluating a binary classifier with a continuous response
+(3) Evaluating image-based classifiers
+(4) Evaluating image-based classifiers with continuous responses
+(5) Exit Program
+Please enter a selection: 3
+Part III: F1 = 0.6766
+Please select one of the following options: 
+
+(1) Evaluating a binary classifier
+(2) Evaluating a binary classifier with a continuous response
+(3) Evaluating image-based classifiers
+(4) Evaluating image-based classifiers with continuous responses
+(5) Exit Program
+Please enter a selection: 3
+Part III: F1 = 0.6318
+Please select one of the following options: 
+
+(1) Evaluating a binary classifier
+(2) Evaluating a binary classifier with a continuous response
+(3) Evaluating image-based classifiers
+(4) Evaluating image-based classifiers with continuous responses
+(5) Exit Program
+Please enter a selection: 5
+exiting program
+[yathavan@lonetech LAB08]$ 
