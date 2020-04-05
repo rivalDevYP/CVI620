@@ -7,6 +7,8 @@
 #IncludeRegexTransform: 
 
 /home/yathavan/Documents/Semester6/SCHOOL/SEMESTER6/CVI620/Labs/DiceDetector/diceDetect.cpp
+iostream
+-
 vector
 -
 opencv2/core.hpp
