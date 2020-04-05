@@ -265,8 +265,8 @@ void option_4()
 	{
 		for (int juggernaut = 0; juggernaut < threshold_val_len; juggernaut++)
 		{
-			// thresh_v(cont_res_ptr, bitmap_A2_arr, csv_len, thresholdValues[juggernaut]);
-			if (calcPR(bitmap_A2_arr, bitmap_GT_arr, 125, &P, &R))
+			thresh_v(cont_res_ptr, bitmap_A2_arr, 128, thresholdValues[juggernaut]);
+			if (calcPR(bitmap_A2_arr, bitmap_GT_arr, 128, &P, &R))
 			{
 				double FB = calcFb(P, R, 1);
 				std::cout << P << "," << R << std::endl;
