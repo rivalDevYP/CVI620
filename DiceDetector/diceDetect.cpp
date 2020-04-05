@@ -53,8 +53,12 @@ int main ()
 				bool process = true;
 				for (int spartan = 0; spartan < diceRects.size(); spartan++)
 				{
-					process = false;
-					break;
+					float dist = cv::norm(rotatedRect.center - diceRects[spartan].center);
+					if (dist < 10)
+					{
+						process = false;
+						break;
+					}
 				}
 
 				if (process)
