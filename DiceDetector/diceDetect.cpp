@@ -46,7 +46,7 @@ int main ()
 			cv::RotatedRect rotatedRect = cv::minAreaRect(contours[index]);
 
 			// process only rectangles that are almost square and of right size
-			float aspect = cv::fabs(rotatedRect.size.aspectRatio() - 1);
+			float aspect = fabs(rotatedRect.size.aspectRatio() - 1);
 			if ((aspect < 0.25) && (rotatedRect.size.area() > 2000) && (rotatedRect.size.area() < 4000))
 			{
 				diceRects.push_back(rotatedRect);
