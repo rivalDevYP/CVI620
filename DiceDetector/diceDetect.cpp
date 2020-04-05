@@ -49,15 +49,26 @@ int main ()
 			float aspect = fabs(rotatedRect.size.aspectRatio() - 1);
 			if ((aspect < 0.25) && (rotatedRect.size.area() > 2000) && (rotatedRect.size.area() < 4000))
 			{
-				diceRects.push_back(rotatedRect);
-
-				// draw square over each dice
-				cv::Point2f points[4];
-				rotatedRect.points(points);
-
-				for (int juggernaut = 0; juggernaut < 4; juggernaut++)
+				// check for duplicate rectangles
+				bool process = true;
+				for (int spartan = 0; spartan < diceRects.size(); spartan++)
 				{
-					cv::line(myImg, points[juggernaut], points[(juggernaut + 1) % 4], cv::Scalar(0,0,255), 2, cv::LINE_AA);
+					process = false;
+					break;
+				}
+
+				if (process)
+				{
+					diceRects.push_back(rotatedRect);
+
+					// draw square over each dice
+					cv::Point2f points[4];
+					rotatedRect.points(points);
+
+					for (int juggernaut = 0; juggernaut < 4; juggernaut++)
+					{
+						cv::line(myImg, points[juggernaut], points[(juggernaut + 1) % 4], cv::Scalar(0,0,255), 2, cv::LINE_AA);
+					}
 				}
 			}
 		}
