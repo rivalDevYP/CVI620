@@ -61,6 +61,8 @@ int main ()
 		sprintf(buffer, "Dice: %d", (int) diceRects.size());
 		cv::putText(myImg, buffer, cv::Point(20, 30), cv::FONT_HERSHEY_DUPLEX, 0.8, cv::Scalar(0,255,0), 1, cv::LINE_AA);
 
+		// displaying color image in DisplayWindow
+		cv::imshow("DisplayWindow", myImg);
 		// displaying grey image in ComputationWindow
 		cv::imshow("ComputationWindow", greyImage);
 
