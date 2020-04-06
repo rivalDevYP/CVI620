@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">DiceDetectorsMobileApp</string>
+    <string name="number_of_1s">Number of 1s:</string>
+    <string name="number_of_6s">Number of 6s:</string>
+    <string name="number_of_5s">Number of 5s:</string>
+    <string name="number_of_4s">Number of 4s:</string>
+    <string name="number_of_3s">Number of 3s:</string>
+    <string name="number_of_2s">Number of 2s:</string>
+    <string name="number_of_dice">Number of Dice:</string>
 </resources>
