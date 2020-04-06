@@ -32,7 +32,7 @@
                 android:orientation="horizontal"
                 android:id="@+id/numDiceContainer">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/number_of_dice"
@@ -41,7 +41,7 @@
                     android:fontFamily="sans-serif"
                     android:padding="8sp"/>
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:layout_width="50dp"
                     android:layout_height="match_parent"
                     android:id="@+id/diceCountTextView"
@@ -64,7 +64,7 @@
                     android:orientation="horizontal"
                     android:id="@+id/onesContainer">
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/number_of_1s"
@@ -73,7 +73,7 @@
                         android:fontFamily="sans-serif"
                         android:padding="8sp"/>
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:layout_width="50dp"
                         android:layout_height="wrap_content"
                         android:id="@+id/onesCountTextView"
@@ -90,7 +90,7 @@
                     android:orientation="horizontal"
                     android:id="@+id/foursContainer">
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/number_of_4s"
@@ -99,7 +99,7 @@
                         android:fontFamily="sans-serif"
                         android:padding="8sp"/>
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:layout_width="50dp"
                         android:layout_height="wrap_content"
                         android:id="@+id/foursCountTextView"
@@ -123,7 +123,7 @@
                     android:orientation="horizontal"
                     android:id="@+id/twosContainer">
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/number_of_2s"
@@ -132,7 +132,7 @@
                         android:fontFamily="sans-serif"
                         android:padding="8sp"/>
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:layout_width="50dp"
                         android:layout_height="wrap_content"
                         android:id="@+id/twosCountTextView"
@@ -149,7 +149,7 @@
                     android:orientation="horizontal"
                     android:id="@+id/fivesContainer">
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/number_of_5s"
@@ -158,7 +158,7 @@
                         android:fontFamily="sans-serif"
                         android:padding="8sp"/>
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:layout_width="50dp"
                         android:layout_height="wrap_content"
                         android:id="@+id/fivesCountTextView"
@@ -182,7 +182,7 @@
                     android:orientation="horizontal"
                     android:id="@+id/threesContainer">
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/number_of_3s"
@@ -191,7 +191,7 @@
                         android:fontFamily="sans-serif"
                         android:padding="8sp"/>
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:layout_width="50dp"
                         android:layout_height="wrap_content"
                         android:id="@+id/threesCountTextView"
@@ -209,7 +209,7 @@
                     android:orientation="horizontal"
                     android:id="@+id/sixesContainer">
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/number_of_6s"
@@ -218,7 +218,7 @@
                         android:fontFamily="sans-serif"
                         android:padding="8sp"/>
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:layout_width="50dp"
                         android:layout_height="wrap_content"
                         android:id="@+id/sixesCountTextView"

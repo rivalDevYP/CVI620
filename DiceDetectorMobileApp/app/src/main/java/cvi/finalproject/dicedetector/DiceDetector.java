@@ -7,9 +7,8 @@ import android.view.LayoutInflater;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.view.animation.RotateAnimation;
 
-import androidx.annotation.Dimension;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -18,7 +17,6 @@ import com.google.android.material.textview.MaterialTextView;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
-import org.opencv.android.JavaCamera2View;
 import org.opencv.android.JavaCameraView;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Core;
@@ -32,21 +30,14 @@ import org.opencv.core.RotatedRect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
-import org.opencv.videoio.VideoCapture;
 
-import java.util.List;
 import java.util.Vector;
 
 public class DiceDetector extends Fragment implements CameraBridgeViewBase.CvCameraViewListener2
 {
     private static String TAG = "MainActivity";
-
     private Context myContext;
-
-    private VideoCapture captureModule;
-    private Mat standardImage, greyScaleImage;
-    private TextView totalDice, oneCount, twoCount, threeCount, fourCount, fiveCount, sixCount;
-    private CameraBridgeViewBase cvCameraView;
+    private MaterialTextView totalDice, oneCount, twoCount, threeCount, fourCount, fiveCount, sixCount;
     private JavaCameraView javaCameraView;
     private Mat mRGBA, mRGBAT, mGRAY, mGRAYT;
 
@@ -158,6 +149,13 @@ public class DiceDetector extends Fragment implements CameraBridgeViewBase.CvCam
         MatOfInt4 hierarchy = new MatOfInt4();
         Imgproc.findContours(mGRAYT, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
 
+        int[] diceCounts = new int[6];
+
+        for (int i = 0; i < 6; i++)
+        {
+            diceCounts[i] = 0;
+        }
+
         // find minimum area rectangles
         Vector<RotatedRect> diceRects = new Vector<>();
         for (int index = 0; index < contours.size(); index++)
@@ -197,18 +195,88 @@ public class DiceDetector extends Fragment implements CameraBridgeViewBase.CvCam
                         Scalar mScalar = new Scalar(0,255,0);
                         Imgproc.line(mRGBAT, points[jug], points[(jug + 1) % 4], mScalar, 2, Imgproc.LINE_AA);
                     }
+
+                    // counting the dots on each die
+                    for (int dotIter = 0; dotIter < diceRects.size(); dotIter++)
+                    {
+                        // extract die image
+                        Mat rotation = new Mat();
+                        Mat rotated = new Mat();
+                        Mat cropped = new Mat();
+
+                        RotatedRect rect = diceRects.elementAt(dotIter);
+
+                        rotation = Imgproc.getRotationMatrix2D(rect.center, rect.angle, 1.0);
+
+                        Imgproc.warpAffine(mGRAYT, rotated, rotation, mGRAYT.size(), Imgproc.INTER_CUBIC);
+
+                        Size mySize = new Size(rect.size.width - 10, rect.size.height - 10);
+
+                        Imgproc.getRectSubPix(rotated, mySize, rect.center, cropped);
+
+                        // find contours
+                        Vector<MatOfPoint> die_contours = new Vector<>();
+                        MatOfInt4 die_hierarchy = new MatOfInt4();
+                        Imgproc.threshold(cropped, cropped, 64, 255, Imgproc.THRESH_BINARY);
+                        Imgproc.findContours(cropped, die_contours, die_hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
+
+                        // find and filter minimum area rects
+                        Vector<RotatedRect> dotsRects = new Vector<>();
+                        for (int dotIter_2 = 0; dotIter_2 < die_contours.size(); dotIter_2++)
+                        {
+                            MatOfPoint2f matOfPoint2f1 = new MatOfPoint2f(die_contours.elementAt(dotIter_2));
+                            RotatedRect dotRect = Imgproc.minAreaRect(matOfPoint2f1);
+
+                            float aspect2 = Math.abs((float) (dotRect.size.width / dotRect.size.height) - 1);
+                            if ((aspect2 < 0.4) && (dotRect.size.area() > 8) && (dotRect.size.area() < 150))
+                            {
+                                // check if duplicate rect
+                                boolean process2 = true;
+                                for (int jug2 = 0; jug2 < dotsRects.size(); jug2++)
+                                {
+                                    Point ptr1 = dotRect.center;
+                                    Point ptr2 = dotsRects.elementAt(jug2).center;
+
+                                    float dist_dot = (float) ((Math.sqrt(ptr1.x * ptr1.y)) - Math.sqrt(ptr2.x * ptr2.y));
+
+                                    if (dist_dot < 10)
+                                    {
+                                        process2 = false;
+                                        break;
+                                    }
+                                }
+
+                                if (process2)
+                                {
+                                    dotsRects.add(dotRect);
+                                }
+                            }
+                        }
+                        // save dots counts
+
+                        if (dotsRects.size() >= 1 && dotsRects.size() <= 6)
+                        {
+                            diceCounts[dotsRects.size() - 1]++;
+                        }
+                    }
                 }
             }
         }
 
-        setTotalDiceText(Integer.toString(diceRects.size()));
+        setDiceText(diceRects.size(), diceCounts[0],diceCounts[1],diceCounts[2],diceCounts[3],diceCounts[4],diceCounts[5]);
 
         return mRGBAT;
     }
 
-    private void setTotalDiceText(String incomingText)
+    private void setDiceText(int total, int one, int two, int three, int four, int five, int six)
     {
-        totalDice.setText(incomingText);
+        totalDice.setText(Integer.toString(total));
+        oneCount.setText(Integer.toString(one));
+        twoCount.setText(Integer.toString(two));
+        threeCount.setText(Integer.toString(three));
+        fourCount.setText(Integer.toString(four));
+        fiveCount.setText(Integer.toString(five));
+        sixCount.setText(Integer.toString(six));
     }
 
     @Override
