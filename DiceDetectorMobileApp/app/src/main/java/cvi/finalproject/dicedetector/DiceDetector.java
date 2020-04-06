@@ -1,11 +1,13 @@
 package cvi.finalproject.dicedetector;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.Dimension;
 import androidx.annotation.NonNull;
@@ -39,9 +41,11 @@ public class DiceDetector extends Fragment implements CameraBridgeViewBase.CvCam
 {
     private static String TAG = "MainActivity";
 
+    private Context myContext;
+
     private VideoCapture captureModule;
     private Mat standardImage, greyScaleImage;
-    private MaterialTextView totalDice, oneCount, twoCount, threeCount, fourCount, fiveCount, sixCount;
+    private TextView totalDice, oneCount, twoCount, threeCount, fourCount, fiveCount, sixCount;
     private CameraBridgeViewBase cvCameraView;
     private JavaCameraView javaCameraView;
     private Mat mRGBA, mRGBAT, mGRAY, mGRAYT;
@@ -58,7 +62,7 @@ public class DiceDetector extends Fragment implements CameraBridgeViewBase.CvCam
 //        }
     }
 
-    BaseLoaderCallback baseLoaderCallback = new BaseLoaderCallback(this.getContext())
+    BaseLoaderCallback baseLoaderCallback = new BaseLoaderCallback(myContext)
     {
         @Override
         public void onManagerConnected(int status)
@@ -81,6 +85,8 @@ public class DiceDetector extends Fragment implements CameraBridgeViewBase.CvCam
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
+        myContext = getActivity();
+
         View view = inflater.inflate(R.layout.view_cam, container, false);
 
         totalDice = view.findViewById(R.id.diceCountTextView);
@@ -125,8 +131,6 @@ public class DiceDetector extends Fragment implements CameraBridgeViewBase.CvCam
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame)
     {
-        int diceCount = 0;
-
         mRGBA = inputFrame.rgba();
         mGRAY = inputFrame.gray();
 
@@ -139,35 +143,34 @@ public class DiceDetector extends Fragment implements CameraBridgeViewBase.CvCam
         Imgproc.resize(mRGBAT, mRGBAT, mRGBA.size());
         Imgproc.resize(mGRAYT, mGRAYT, mGRAY.size());
 
-        Log.d(TAG, "blur to reduce noise");
+        // blur to reduce noise
         Size blurKernel = new Size(3,3);
         Imgproc.blur(mGRAYT, mGRAYT, blurKernel);
 
-        Log.d(TAG,"binary thresholding");
+        // binary thresholding
         Imgproc.threshold(mGRAYT, mGRAYT, 170, 255, Imgproc.THRESH_BINARY);
 
-        Log.d(TAG,"perform edge detection");
+        // perform edge detection
         Imgproc.Canny(mGRAYT, mGRAYT, 80, 230);
 
-        Log.d(TAG,"finding contours");
+        // finding contours
         Vector<MatOfPoint> contours = new Vector<>();
         MatOfInt4 hierarchy = new MatOfInt4();
         Imgproc.findContours(mGRAYT, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
 
-        Log.d(TAG,"find minimum area rectangles");
+        // find minimum area rectangles
         Vector<RotatedRect> diceRects = new Vector<>();
         for (int index = 0; index < contours.size(); index++)
         {
-            Log.d(TAG,"for each contour, search minimum area rectangle");
-            MatOfPoint2f matOfPoint2f = new MatOfPoint2f();
-            contours.elementAt(index).convertTo(matOfPoint2f, CvType.CV_32S);
+            // for each contour, search minimum area rectangle
+            MatOfPoint2f matOfPoint2f = new MatOfPoint2f(contours.elementAt(index).toArray());
             RotatedRect rotatedRect = Imgproc.minAreaRect(matOfPoint2f);
 
-            Log.d(TAG,"process only rectangles that are almost square and of right side");
-            float aspect = Math.abs((float) (rotatedRect.size.height / rotatedRect.size.width) - 1);
-            if ((aspect < 0.25) && (rotatedRect.size.area() > 2000) && (rotatedRect.size.area() < 4000))
+            // process only rectangles that are almost square and of right side
+            float aspect = Math.abs((float) (rotatedRect.size.width / rotatedRect.size.height) - 1);
+            if ((aspect < 0.25) && (rotatedRect.size.area() > 1000) && (rotatedRect.size.area() < 4000))
             {
-                Log.d(TAG,"check for duplicate rectangles");
+                // check for duplicate rectangles
                 boolean process = true;
                 for (int spartan = 0; spartan < diceRects.size(); spartan++)
                 {
@@ -188,21 +191,24 @@ public class DiceDetector extends Fragment implements CameraBridgeViewBase.CvCam
                     Point[] points = new Point[4];
                     rotatedRect.points(points);
 
-                    Log.d(TAG,"draw square over each dice");
+                    // draw square over each dice
                     for (int jug = 0; jug < 4; jug++)
                     {
-                        Scalar mScalar = new Scalar(0,0,255);
+                        Scalar mScalar = new Scalar(0,255,0);
                         Imgproc.line(mRGBAT, points[jug], points[(jug + 1) % 4], mScalar, 2, Imgproc.LINE_AA);
                     }
                 }
             }
         }
 
-//        totalDice.setText(diceRects.size());
+        setTotalDiceText(Integer.toString(diceRects.size()));
 
-//        return mRGBAT;
+        return mRGBAT;
+    }
 
-        return mGRAYT;
+    private void setTotalDiceText(String incomingText)
+    {
+        totalDice.setText(incomingText);
     }
 
     @Override
@@ -227,7 +233,7 @@ public class DiceDetector extends Fragment implements CameraBridgeViewBase.CvCam
         else
         {
             Log.d(TAG, "OpenCV not working or loaded");
-            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION, this.getContext(), baseLoaderCallback);
+            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION, myContext, baseLoaderCallback);
         }
     }
 }

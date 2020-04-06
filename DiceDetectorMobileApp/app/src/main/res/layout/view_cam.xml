@@ -1,12 +1,238 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <org.opencv.android.JavaCameraView
         android:layout_width="match_parent"
-        android:layout_height="520dp"
-        android:id="@+id/cameraView"/>
+        android:layout_height="500dp"
+        android:id="@+id/cameraView"
+        app:show_fps="true"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"/>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="15sp"
+        app:cardCornerRadius="2dp"
+        app:cardElevation="8sp"
+        android:layout_gravity="center">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/numDiceContainer">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/number_of_dice"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:fontFamily="sans-serif"
+                    android:padding="8sp"/>
+
+                <TextView
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/diceCountTextView"
+                    android:text="ten"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:fontFamily="sans-serif"
+                    android:padding="8sp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:id="@+id/onesContainer">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/number_of_1s"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="sans-serif"
+                        android:padding="8sp"/>
+
+                    <TextView
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/onesCountTextView"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="sans-serif"
+                        android:padding="8sp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:id="@+id/foursContainer">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/number_of_4s"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="sans-serif"
+                        android:padding="8sp"/>
+
+                    <TextView
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/foursCountTextView"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="sans-serif"
+                        android:padding="8sp"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:id="@+id/twosContainer">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/number_of_2s"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="sans-serif"
+                        android:padding="8sp"/>
+
+                    <TextView
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/twosCountTextView"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="sans-serif"
+                        android:padding="8sp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:id="@+id/fivesContainer">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/number_of_5s"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="sans-serif"
+                        android:padding="8sp"/>
+
+                    <TextView
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/fivesCountTextView"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="sans-serif"
+                        android:padding="8sp"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:id="@+id/threesContainer">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/number_of_3s"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="sans-serif"
+                        android:padding="8sp"/>
+
+                    <TextView
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/threesCountTextView"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="sans-serif"
+                        android:padding="8sp"/>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:id="@+id/sixesContainer">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/number_of_6s"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="sans-serif"
+                        android:padding="8sp"/>
+
+                    <TextView
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/sixesCountTextView"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="sans-serif"
+                        android:padding="8sp"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
 </LinearLayout>
