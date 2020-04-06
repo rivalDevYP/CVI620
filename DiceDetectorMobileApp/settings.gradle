@@ -1,0 +1,3 @@
+include ':app'
+rootProject.name='DiceDetectorsMobileApp'
+include ':openCVLibrary3410'
