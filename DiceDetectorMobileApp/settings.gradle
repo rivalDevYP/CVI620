@@ -1,3 +1,4 @@
 include ':app'
 rootProject.name='DiceDetectorsMobileApp'
 include ':openCVLibrary3410'
+include ':openCVLibrary3410'
