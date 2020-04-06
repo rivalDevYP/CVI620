@@ -6,7 +6,7 @@
 
     <org.opencv.android.JavaCameraView
         android:layout_width="match_parent"
-        android:layout_height="matchParent"
+        android:layout_height="520dp"
         android:id="@+id/cameraView"/>
 
 </LinearLayout>

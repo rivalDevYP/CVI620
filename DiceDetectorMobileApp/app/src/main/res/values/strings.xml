@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">DiceDetectorsMobileApp</string>
+    <string name="app_name">Dice Detector</string>
     <string name="number_of_1s">Number of 1s:</string>
     <string name="number_of_6s">Number of 6s:</string>
     <string name="number_of_5s">Number of 5s:</string>
