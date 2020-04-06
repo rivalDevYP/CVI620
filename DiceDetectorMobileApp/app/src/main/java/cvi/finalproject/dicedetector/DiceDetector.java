@@ -224,7 +224,7 @@ public class DiceDetector extends Fragment implements CameraBridgeViewBase.CvCam
                         Vector<RotatedRect> dotsRects = new Vector<>();
                         for (int dotIter_2 = 0; dotIter_2 < die_contours.size(); dotIter_2++)
                         {
-                            MatOfPoint2f matOfPoint2f1 = new MatOfPoint2f(die_contours.elementAt(dotIter_2));
+                            MatOfPoint2f matOfPoint2f1 = new MatOfPoint2f(die_contours.elementAt(dotIter_2).toArray());
                             RotatedRect dotRect = Imgproc.minAreaRect(matOfPoint2f1);
 
                             float aspect2 = Math.abs((float) (dotRect.size.width / dotRect.size.height) - 1);
