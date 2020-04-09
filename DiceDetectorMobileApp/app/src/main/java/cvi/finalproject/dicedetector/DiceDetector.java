@@ -1,5 +1,6 @@
 package cvi.finalproject.dicedetector;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,7 +38,7 @@ public class DiceDetector extends Fragment implements CameraBridgeViewBase.CvCam
 {
     private static String TAG = "MainActivity";
     private Context myContext;
-    private MaterialTextView totalDice, oneCount, twoCount, threeCount, fourCount, fiveCount, sixCount;
+    private MaterialTextView totalDice, oneCount, twoCount, threeCount, fourCount, fiveCount, sixCount, sumCount, averageCount;
     private JavaCameraView javaCameraView;
     private Mat mRGBA, mRGBAT, mGRAY, mGRAYT;
 
@@ -87,6 +88,8 @@ public class DiceDetector extends Fragment implements CameraBridgeViewBase.CvCam
         fourCount = view.findViewById(R.id.foursCountTextView);
         fiveCount = view.findViewById(R.id.fivesCountTextView);
         sixCount = view.findViewById(R.id.sixesCountTextView);
+        sumCount = view.findViewById(R.id.sumTextView);
+        averageCount = view.findViewById(R.id.averageSumTextView);
 
         javaCameraView = view.findViewById(R.id.cameraView);
         javaCameraView.setVisibility(SurfaceView.VISIBLE);
@@ -277,15 +280,20 @@ public class DiceDetector extends Fragment implements CameraBridgeViewBase.CvCam
         return mRGBAT;
     }
 
-    private void setDiceText(int total, int one, int two, int three, int four, int five, int six)
+    @SuppressLint("SetTextI18n")
+    private void setDiceText(int totalDiceCount, int one, int two, int three, int four, int five, int six)
     {
-        totalDice.setText(Integer.toString(total));
+        int sum =(one) + (two * 2) + (three * 3) + (four * 4) + (five * 5) + (six * 6);
+
+        totalDice.setText(Integer.toString(totalDiceCount));
         oneCount.setText(Integer.toString(one));
         twoCount.setText(Integer.toString(two));
         threeCount.setText(Integer.toString(three));
         fourCount.setText(Integer.toString(four));
         fiveCount.setText(Integer.toString(five));
         sixCount.setText(Integer.toString(six));
+        sumCount.setText(Integer.toString(sum));
+        averageCount.setText(Integer.toString(sum / totalDiceCount));
     }
 
     @Override
