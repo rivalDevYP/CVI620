@@ -261,9 +261,18 @@ public class DiceDetector extends Fragment implements CameraBridgeViewBase.CvCam
                     }
                 }
             }
+
+            try
+            {
+                inputFrame.wait(2000);
+            } catch (InterruptedException ex)
+            {
+                Log.d(TAG, "Interrupted Exception caught!");
+            }
         }
 
         setDiceText(diceRects.size(), diceCounts[0],diceCounts[1],diceCounts[2],diceCounts[3],diceCounts[4],diceCounts[5]);
+
 
         return mRGBAT;
     }
