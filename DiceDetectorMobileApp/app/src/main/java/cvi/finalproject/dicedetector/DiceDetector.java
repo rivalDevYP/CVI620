@@ -125,6 +125,24 @@ public class DiceDetector extends Fragment implements CameraBridgeViewBase.CvCam
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame)
     {
+        // PLAN OF ATTACK
+        // identify each die
+        // identify the dots inside each die
+
+        // in C++ you use VideoCapture, and look at each frame to perform algorithms
+        // in Java, you must intercept each frame of inputFrame and perform calculations... resulting in increased memory usage...
+
+        // IDENTIFYING EACH DIE
+        // find edges -> Canny Edge Detector
+        // void cv::Canny (
+        //      cv::InputArray image,
+        //      cv::OutputArray edges,
+        //      double threshold1,
+        //      double threshold2,
+        //      int apertureSize = 3,
+        //      bool L2gradient = false
+        // )
+
         mRGBA = inputFrame.rgba();
         mGRAY = inputFrame.gray();
 
@@ -137,163 +155,193 @@ public class DiceDetector extends Fragment implements CameraBridgeViewBase.CvCam
         Imgproc.resize(mRGBAT, mRGBAT, mRGBA.size());
         Imgproc.resize(mGRAYT, mGRAYT, mGRAY.size());
 
-        // blur to reduce noise
-        Size blurKernel = new Size(3,3);
-        Imgproc.blur(mGRAYT, mGRAYT, blurKernel);
+        Mat hsvImg = new Mat();
 
-        // binary thresholding
-        Imgproc.threshold(mGRAYT, mGRAYT, 170, 255, Imgproc.THRESH_BINARY);
+        Imgproc.cvtColor(mRGBAT, mRGBAT, Imgproc.COLOR_BGR2HSV);
 
-        // perform edge detection
-        Imgproc.Canny(mGRAYT, mGRAYT, 80, 230);
 
-        // finding contours
-        Vector<MatOfPoint> contours = new Vector<>();
-        MatOfInt4 hierarchy = new MatOfInt4();
-        Imgproc.findContours(mGRAYT, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
+//        Imgproc.Canny(mGRAYT, mGRAYT, 150, 200, 3);
 
-        int[] diceCounts = new int[6];
+//        Vector<MatOfPoint2f> lines = new Vector<>();
 
-        for (int i = 0; i < 6; i++)
-        {
-            diceCounts[i] = 0;
-        }
-
-        // find minimum area rectangles
-        Vector<RotatedRect> diceRects = new Vector<>();
-        for (int index = 0; index < contours.size(); index++)
-        {
-            // for each contour, search minimum area rectangle
-            MatOfPoint2f matOfPoint2f = new MatOfPoint2f(contours.elementAt(index).toArray());
-            RotatedRect rotatedRect = Imgproc.minAreaRect(matOfPoint2f);
-
-            // process only rectangles that are almost square and of right side
-            float aspect = Math.abs((float) (rotatedRect.size.width / rotatedRect.size.height) - 1);
-            if ((aspect < 0.25) && (rotatedRect.size.area() > 1000) && (rotatedRect.size.area() < 4000))
-            {
-                // check for duplicate rectangles
-                boolean process = true;
-                for (int spartan = 0; spartan < diceRects.size(); spartan++)
-                {
-                    Point pt1 = rotatedRect.center;
-                    Point pt2 = diceRects.elementAt(spartan).center;
-
-                    float dist = (float) (Math.sqrt(pt1.x * pt1.y) - Math.sqrt(pt2.x * pt2.y));
-
-                    if (dist < 10)
-                    {
-                        process = false;
-                        break;
-                    }
-                }
-                if (process)
-                {
-                    diceRects.add(rotatedRect);
-                    Point[] points = new Point[4];
-                    rotatedRect.points(points);
-
-                    // draw square over each dice
-                    for (int jug = 0; jug < 4; jug++)
-                    {
-                        Scalar mScalar = new Scalar(0,255,0);
-                        Imgproc.line(mRGBAT, points[jug], points[(jug + 1) % 4], mScalar, 2, Imgproc.LINE_AA);
-                    }
-
-                    // counting the dots on each die
-                    for (int dotIter = 0; dotIter < diceRects.size(); dotIter++)
-                    {
-                        // extract die image
-                        Mat rotation = new Mat();
-                        Mat rotated = new Mat();
-                        Mat cropped = new Mat();
-
-                        RotatedRect rect = diceRects.elementAt(dotIter);
-
-                        rotation = Imgproc.getRotationMatrix2D(rect.center, rect.angle, 1.0);
-
-                        Imgproc.warpAffine(mGRAYT, rotated, rotation, mGRAYT.size(), Imgproc.INTER_CUBIC);
-
-                        Size mySize = new Size(rect.size.width - 10, rect.size.height - 10);
-
-                        Imgproc.getRectSubPix(rotated, mySize, rect.center, cropped);
-
-                        // find contours
-                        Vector<MatOfPoint> die_contours = new Vector<>();
-                        MatOfInt4 die_hierarchy = new MatOfInt4();
-                        Imgproc.threshold(cropped, cropped, 64, 255, Imgproc.THRESH_BINARY);
-                        Imgproc.findContours(cropped, die_contours, die_hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
-
-                        // find and filter minimum area rects
-                        Vector<RotatedRect> dotsRects = new Vector<>();
-                        for (int dotIter_2 = 0; dotIter_2 < die_contours.size(); dotIter_2++)
-                        {
-                            MatOfPoint2f matOfPoint2f1 = new MatOfPoint2f(die_contours.elementAt(dotIter_2).toArray());
-                            RotatedRect dotRect = Imgproc.minAreaRect(matOfPoint2f1);
-
-                            float aspect2 = Math.abs((float) (dotRect.size.width / dotRect.size.height) - 1);
-                            if ((aspect2 < 0.4) && (dotRect.size.area() > 8) && (dotRect.size.area() < 150))
-                            {
-                                // check if duplicate rect
-                                boolean process2 = true;
-                                for (int jug2 = 0; jug2 < dotsRects.size(); jug2++)
-                                {
-                                    Point ptr1 = dotRect.center;
-                                    Point ptr2 = dotsRects.elementAt(jug2).center;
-
-                                    float dist_dot = (float) ((Math.sqrt(ptr1.x * ptr1.y)) - Math.sqrt(ptr2.x * ptr2.y));
-
-                                    if (dist_dot < 10)
-                                    {
-                                        process2 = false;
-                                        break;
-                                    }
-                                }
-
-                                if (process2)
-                                {
-                                    dotsRects.add(dotRect);
-                                }
-                            }
-                        }
-                        // save dots counts
-
-                        if (dotsRects.size() >= 1 && dotsRects.size() <= 6)
-                        {
-                            diceCounts[dotsRects.size() - 1]++;
-                        }
-                    }
-                }
-            }
-
-            try
-            {
-                inputFrame.wait(2000);
-            } catch (InterruptedException ex)
-            {
-                Log.d(TAG, "Interrupted Exception caught!");
-            }
-        }
-
-        setDiceText(diceRects.size(), diceCounts[0],diceCounts[1],diceCounts[2],diceCounts[3],diceCounts[4],diceCounts[5]);
-
+//        setDiceText(0,0,0,0,0,0, 0);
 
         return mRGBAT;
+
+
+//        mRGBA = inputFrame.rgba();
+//        mGRAY = inputFrame.gray();
+//
+//        mRGBAT = mRGBA.t();
+//        mGRAYT = mGRAY.t();
+//
+//        Core.flip(mRGBA.t(), mRGBAT, 1);
+//        Core.flip(mGRAY.t(), mGRAYT, 1);
+//
+//        Imgproc.resize(mRGBAT, mRGBAT, mRGBA.size());
+//        Imgproc.resize(mGRAYT, mGRAYT, mGRAY.size());
+//
+//        // blur to reduce noise
+//        Size blurKernel = new Size(3,3);
+//        Imgproc.blur(mGRAYT, mGRAYT, blurKernel);
+//
+//        // binary thresholding
+//        Imgproc.threshold(mGRAYT, mGRAYT, 170, 255, Imgproc.THRESH_BINARY);
+//
+//        // perform edge detection
+//        Imgproc.Canny(mGRAYT, mGRAYT, 80, 230);
+//
+//        // finding contours
+//        Vector<MatOfPoint> contours = new Vector<>();
+//        MatOfInt4 hierarchy = new MatOfInt4();
+//        Imgproc.findContours(mGRAYT, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
+//
+//        int[] diceCounts = new int[6];
+//
+//        for (int i = 0; i < 6; i++)
+//        {
+//            diceCounts[i] = 0;
+//        }
+//
+//        // find minimum area rectangles
+//        Vector<RotatedRect> diceRects = new Vector<>();
+//        for (int index = 0; index < contours.size(); index++)
+//        {
+//            // for each contour, search minimum area rectangle
+//            MatOfPoint2f matOfPoint2f = new MatOfPoint2f(contours.elementAt(index).toArray());
+//            RotatedRect rotatedRect = Imgproc.minAreaRect(matOfPoint2f);
+//
+//            // process only rectangles that are almost square and of right side
+//            float aspect = Math.abs((float) (rotatedRect.size.width / rotatedRect.size.height) - 1);
+//            if ((aspect < 0.25) && (rotatedRect.size.area() > 1000) && (rotatedRect.size.area() < 4000))
+//            {
+//                // check for duplicate rectangles
+//                boolean process = true;
+//                for (int spartan = 0; spartan < diceRects.size(); spartan++)
+//                {
+//                    Point pt1 = rotatedRect.center;
+//                    Point pt2 = diceRects.elementAt(spartan).center;
+//
+//                    float dist = (float) (Math.sqrt(pt1.x * pt1.y) - Math.sqrt(pt2.x * pt2.y));
+//
+//                    if (dist < 10)
+//                    {
+//                        process = false;
+//                        break;
+//                    }
+//                }
+//                if (process)
+//                {
+//                    diceRects.add(rotatedRect);
+//                    Point[] points = new Point[4];
+//                    rotatedRect.points(points);
+//
+//                    // draw square over each dice
+//                    for (int jug = 0; jug < 4; jug++)
+//                    {
+//                        Scalar mScalar = new Scalar(0,255,0);
+//                        Imgproc.line(mRGBAT, points[jug], points[(jug + 1) % 4], mScalar, 2, Imgproc.LINE_AA);
+//                    }
+//
+//                    // counting the dots on each die
+//                    for (int dotIter = 0; dotIter < diceRects.size(); dotIter++)
+//                    {
+//                        // extract die image
+//                        Mat rotation = new Mat();
+//                        Mat rotated = new Mat();
+//                        Mat cropped = new Mat();
+//
+//                        RotatedRect rect = diceRects.elementAt(dotIter);
+//
+//                        rotation = Imgproc.getRotationMatrix2D(rect.center, rect.angle, 1.0);
+//
+//                        Imgproc.warpAffine(mGRAYT, rotated, rotation, mGRAYT.size(), Imgproc.INTER_CUBIC);
+//
+//                        Size mySize = new Size(rect.size.width - 10, rect.size.height - 10);
+//
+//                        Imgproc.getRectSubPix(rotated, mySize, rect.center, cropped);
+//
+//                        // find contours
+//                        Vector<MatOfPoint> die_contours = new Vector<>();
+//                        MatOfInt4 die_hierarchy = new MatOfInt4();
+//                        Imgproc.threshold(cropped, cropped, 64, 255, Imgproc.THRESH_BINARY);
+//                        Imgproc.findContours(cropped, die_contours, die_hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
+//
+//                        // find and filter minimum area rects
+//                        Vector<RotatedRect> dotsRects = new Vector<>();
+//                        for (int dotIter_2 = 0; dotIter_2 < die_contours.size(); dotIter_2++)
+//                        {
+//                            MatOfPoint2f matOfPoint2f1 = new MatOfPoint2f(die_contours.elementAt(dotIter_2).toArray());
+//                            RotatedRect dotRect = Imgproc.minAreaRect(matOfPoint2f1);
+//
+//                            float aspect2 = Math.abs((float) (dotRect.size.width / dotRect.size.height) - 1);
+//                            if ((aspect2 < 0.4) && (dotRect.size.area() > 8) && (dotRect.size.area() < 150))
+//                            {
+//                                // check if duplicate rect
+//                                boolean process2 = true;
+//                                for (int jug2 = 0; jug2 < dotsRects.size(); jug2++)
+//                                {
+//                                    Point ptr1 = dotRect.center;
+//                                    Point ptr2 = dotsRects.elementAt(jug2).center;
+//
+//                                    float dist_dot = (float) ((Math.sqrt(ptr1.x * ptr1.y)) - Math.sqrt(ptr2.x * ptr2.y));
+//
+//                                    if (dist_dot < 10)
+//                                    {
+//                                        process2 = false;
+//                                        break;
+//                                    }
+//                                }
+//
+//                                if (process2)
+//                                {
+//                                    dotsRects.add(dotRect);
+//                                }
+//                            }
+//                        }
+//                        // save dots counts
+//
+//                        if (dotsRects.size() >= 1 && dotsRects.size() <= 6)
+//                        {
+//                            diceCounts[dotsRects.size() - 1]++;
+//                        }
+//                    }
+//                }
+//            }
+//        }
+
+//        setDiceText(diceRects.size(), diceCounts[0],diceCounts[1],diceCounts[2],diceCounts[3],diceCounts[4],diceCounts[5]);
+
+
+//        return mRGBAT;
     }
 
     @SuppressLint("SetTextI18n")
     private void setDiceText(int totalDiceCount, int one, int two, int three, int four, int five, int six)
     {
-        int sum =(one) + (two * 2) + (three * 3) + (four * 4) + (five * 5) + (six * 6);
+        try
+        {
+            int sum =(one) + (two * 2) + (three * 3) + (four * 4) + (five * 5) + (six * 6);
 
-        totalDice.setText(Integer.toString(totalDiceCount));
-        oneCount.setText(Integer.toString(one));
-        twoCount.setText(Integer.toString(two));
-        threeCount.setText(Integer.toString(three));
-        fourCount.setText(Integer.toString(four));
-        fiveCount.setText(Integer.toString(five));
-        sixCount.setText(Integer.toString(six));
-        sumCount.setText(Integer.toString(sum));
-        averageCount.setText(Integer.toString(sum / totalDiceCount));
+            totalDice.setText(Integer.toString(totalDiceCount));
+            oneCount.setText(Integer.toString(one));
+            twoCount.setText(Integer.toString(two));
+            threeCount.setText(Integer.toString(three));
+            fourCount.setText(Integer.toString(four));
+            fiveCount.setText(Integer.toString(five));
+            sixCount.setText(Integer.toString(six));
+            sumCount.setText(Integer.toString(sum));
+            if (sum > 0)
+            {
+                averageCount.setText(Integer.toString(sum / totalDiceCount));
+            }
+            else
+            {
+                averageCount.setText(Integer.toString(0));
+            }
+        } catch (ArithmeticException err) {
+            Log.e(TAG, "arithmetic exception");
+        }
     }
 
     @Override

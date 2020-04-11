@@ -145,7 +145,7 @@ CMAKE_PROJECT_DESCRIPTION:STATIC=
 CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=diceDetect
+CMAKE_PROJECT_NAME:STATIC=hough_kmeans
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=/usr/bin/ranlib
@@ -217,6 +217,12 @@ diceDetect_BINARY_DIR:STATIC=/home/yathavan/Documents/Semester6/SCHOOL/SEMESTER6
 
 //Value Computed by CMake
 diceDetect_SOURCE_DIR:STATIC=/home/yathavan/Documents/Semester6/SCHOOL/SEMESTER6/CVI620/Labs/DiceDetector
+
+//Value Computed by CMake
+hough_kmeans_BINARY_DIR:STATIC=/home/yathavan/Documents/Semester6/SCHOOL/SEMESTER6/CVI620/Labs/DiceDetector
+
+//Value Computed by CMake
+hough_kmeans_SOURCE_DIR:STATIC=/home/yathavan/Documents/Semester6/SCHOOL/SEMESTER6/CVI620/Labs/DiceDetector
 
 
 ########################

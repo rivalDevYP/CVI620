@@ -4,56 +4,70 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
 
-int main ()
+int main()
 {
 	cv::VideoCapture videoCaptureModule;
 	videoCaptureModule.open(0);
 
-	cv::namedWindow("DisplayWindow");
+	// cv::namedWindow("rgb_window");
+	cv::namedWindow("grey_window");
+	// cv::namedWindow("hsv_window");
 
 	while (1) // infinite loop
 	{
 		// capturing video from webcam
 		cv::Mat myImg;
+		cv::Mat greyImage;
+		// cv::Mat hsvImage;
+
 		videoCaptureModule.read(myImg);
 
-		// discard color values (greyscale) to maximize edge detection
-		cv::Mat greyImage;
+		cv::pyrMeanShiftFiltering(greyImage, greyImage, 20, 40, 3);
 		cv::cvtColor(myImg, greyImage, cv::COLOR_BGR2GRAY);
+		// cv::cvtColor(myImg, hsvImage, cv::COLOR_BGR2HLS);
 
-		// window that will show video output
-		cv::namedWindow("ComputationWindow");
+		long totalValue = 0;
 
-		// blur to reduce noise
-		cv::blur(greyImage, greyImage, cv::Size(3,3));
+		// calculate total value of all pixels (GRAY)
+		for (int i = 0; i < greyImage.rows; i++)
+		{
+			for (int j = 0; j < greyImage.cols; j++)
+			{
+				totalValue += greyImage.at<uchar>(i, j);
+				// greyImage.at<uchar>(i, j) = (greyImage.at<uchar>(i, j)) * ;
+			}
+		}
 
-		// binary thresholding
-		cv::threshold(greyImage, greyImage, 170, 255, cv::THRESH_BINARY);
+		// calculate average light value
+		int averageLightValue = totalValue / greyImage.total();
 
-		// perform edge detection
-		cv::Canny(greyImage, greyImage, 80, 230);
+		cv::blur(greyImage, greyImage, cv::Size(7, 7));
+		// cv::morphologyEx(greyImage, greyImage, cv::MORPH_CLOSE, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3,3)));
+		cv::threshold(greyImage, greyImage, averageLightValue - 25, 255, cv::THRESH_BINARY);
+		cv::Canny(greyImage, greyImage, averageLightValue, 255);
 
-		// find contours
 		std::vector<std::vector<cv::Point>> contours;
 		std::vector<cv::Vec4i> hierarchy;
-		cv::findContours(greyImage, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
+		cv::findContours(
+			greyImage,
+			contours,
+			hierarchy,
+			cv::RETR_TREE,
+			cv::CHAIN_APPROX_SIMPLE
+		);
 
-		// finding minimum area rectangles
 		std::vector<cv::RotatedRect> diceRects;
-		for (int index = 0; index < contours.size(); index++)
+		for (int i = 0; i < contours.size(); i++)
 		{
-			// for each contour, search minimum area rectangle
-			cv::RotatedRect rotatedRect = cv::minAreaRect(contours[index]);
+			cv::RotatedRect rect = cv::minAreaRect(contours[i]);
 
-			// process only rectangles that are almost square and of right size
-			float aspect = fabs(rotatedRect.size.aspectRatio() - 1);
-			if ((aspect < 0.25) && (rotatedRect.size.area() > 2000) && (rotatedRect.size.area() < 4000))
+			float aspect = fabs(rect.size.aspectRatio() - 1);
+			if ((aspect < 0.25) && (rect.size.area() > 2000) && (rect.size.area() < 4000))
 			{
-				// check for duplicate rectangles
 				bool process = true;
-				for (int spartan = 0; spartan < diceRects.size(); spartan++)
+				for (int j = 0; j < diceRects.size(); j++)
 				{
-					float dist = cv::norm(rotatedRect.center - diceRects[spartan].center);
+					float dist = cv::norm(rect.center - diceRects[j].center);
 					if (dist < 10)
 					{
 						process = false;
@@ -63,35 +77,146 @@ int main ()
 
 				if (process)
 				{
-					diceRects.push_back(rotatedRect);
-
-					// draw square over each dice
+					diceRects.push_back(rect);
 					cv::Point2f points[4];
-					rotatedRect.points(points);
-
-					for (int juggernaut = 0; juggernaut < 4; juggernaut++)
+					rect.points(points);
+					for (int j = 0; j < 4; j++)
 					{
-						cv::line(myImg, points[juggernaut], points[(juggernaut + 1) % 4], cv::Scalar(0,0,255), 2, cv::LINE_AA);
+						cv::line(
+							myImg,
+							points[j],
+							points[(j + 1) % 4],
+							cv::Scalar(0, 255, 0),
+							2,
+							cv::LINE_AA);
 					}
 				}
 			}
 		}
 
-		// write dice count on screen
-		char buffer[25];
+		char buffer[32];
 		sprintf(buffer, "Dice: %d", (int) diceRects.size());
-		cv::putText(myImg, buffer, cv::Point(20, 30), cv::FONT_HERSHEY_DUPLEX, 0.8, cv::Scalar(0,255,0), 1, cv::LINE_AA);
+		cv::putText(
+			myImg,
+			buffer,
+			cv::Point(20, 30),
+			cv::FONT_HERSHEY_PLAIN,
+			0.8,
+			cv::Scalar(0,255,0),
+			1,
+			cv::LINE_AA
+		);
 
-		// displaying color image in DisplayWindow
-		cv::imshow("DisplayWindow", myImg);
-		// displaying grey image in ComputationWindow
-		cv::imshow("ComputationWindow", greyImage);
+		int diceCounts[6] = {
+			0,0,0,0,0,0
+		};
+
+		for (int i = 0; i < diceRects.size(); i++)
+		{
+			cv::Mat rotation, rotated, cropped;
+			cv::RotatedRect rect = diceRects[i];
+			rotation = cv::getRotationMatrix2D(
+				rect.center,
+				rect.angle,
+				1.0
+			);
+			cv::warpAffine(
+				greyImage,
+				rotated,
+				rotation,
+				greyImage.size(),
+				cv::INTER_CUBIC
+			);
+			cv::getRectSubPix(
+				rotated,
+				cv::Size(
+					rect.size.width - 10,
+					rect.size.height - 10
+				),
+				rect.center,
+				cropped
+			);
+			std::vector<std::vector<cv::Point>> dieContours;
+			std::vector<cv::Vec4i> dieHierarchy;
+			cv::threshold(
+				cropped,
+				cropped,
+				64,
+				255,
+				cv::THRESH_BINARY
+			);
+			cv::findContours(
+				cropped,
+				dieContours,
+				dieHierarchy,
+				cv::RETR_TREE,
+				cv::CHAIN_APPROX_SIMPLE
+			);
+			std::vector<cv::RotatedRect> dotsRects;
+			for (int i = 0; i < dieContours.size(); i++)
+			{
+				cv::RotatedRect dotRect = cv::minAreaRect(dieContours[i]);
+				float aspect = fabs(dotRect.size.aspectRatio() - 1);
+				if ((aspect < 0.4) && (dotRect.size.area() > 8) && (dotRect.size.area() < 150))
+				{
+					bool process = true;
+					for (int j = 0; j < dotsRects.size(); j++)
+					{
+						float dist = cv::norm(dotRect.center - dotsRects[j].center);
+						if (dist < 10)
+						{
+							process = false;
+							break;
+						}
+					}
+
+					if (process)
+					{
+						dotsRects.push_back(dotRect);
+					}
+				}
+			}
+
+			if (dotsRects.size() >= 1 && dotsRects.size() <= 6)
+			{
+				diceCounts[dotsRects.size() - 1]++;
+			}
+		}
+
+		for (int i = 1; i < 6; i++)
+		{
+			int count = 0;
+			for (int j = i; i < 6; i++)
+			{
+				count += diceCounts[j];
+			}
+			sprintf(buffer, "%d+: %d", (i+1), count);
+			cv::putText(
+				myImg,
+				buffer,
+				cv::Point(20, 55 + 25 * i),
+				cv::FONT_HERSHEY_PLAIN,
+				0.8,
+				cv::Scalar(
+					0,
+					255,
+					0
+				),
+				1,
+				cv::LINE_AA
+			);			
+		}
+
+		cv::imshow("rgb_window", myImg);
+		cv::imshow("grey_window", greyImage);
+		// cv::imshow("hsv_window", drawing);
 
 		int i = cv::waitKey(1);
 
 		if (i != -1)
 		{
 			break;
+			// exit(0);
 		}
 	}
 }

@@ -128,44 +128,44 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named diceDetect
+# Target rules for targets named hough_kmeans
 
 # Build rule for target.
-diceDetect: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 diceDetect
-.PHONY : diceDetect
+hough_kmeans: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 hough_kmeans
+.PHONY : hough_kmeans
 
 # fast build rule for target.
-diceDetect/fast:
-	$(MAKE) -f CMakeFiles/diceDetect.dir/build.make CMakeFiles/diceDetect.dir/build
-.PHONY : diceDetect/fast
+hough_kmeans/fast:
+	$(MAKE) -f CMakeFiles/hough_kmeans.dir/build.make CMakeFiles/hough_kmeans.dir/build
+.PHONY : hough_kmeans/fast
 
-diceDetect.o: diceDetect.cpp.o
+hough_kmeans.o: hough_kmeans.cpp.o
 
-.PHONY : diceDetect.o
+.PHONY : hough_kmeans.o
 
 # target to build an object file
-diceDetect.cpp.o:
-	$(MAKE) -f CMakeFiles/diceDetect.dir/build.make CMakeFiles/diceDetect.dir/diceDetect.cpp.o
-.PHONY : diceDetect.cpp.o
+hough_kmeans.cpp.o:
+	$(MAKE) -f CMakeFiles/hough_kmeans.dir/build.make CMakeFiles/hough_kmeans.dir/hough_kmeans.cpp.o
+.PHONY : hough_kmeans.cpp.o
 
-diceDetect.i: diceDetect.cpp.i
+hough_kmeans.i: hough_kmeans.cpp.i
 
-.PHONY : diceDetect.i
+.PHONY : hough_kmeans.i
 
 # target to preprocess a source file
-diceDetect.cpp.i:
-	$(MAKE) -f CMakeFiles/diceDetect.dir/build.make CMakeFiles/diceDetect.dir/diceDetect.cpp.i
-.PHONY : diceDetect.cpp.i
+hough_kmeans.cpp.i:
+	$(MAKE) -f CMakeFiles/hough_kmeans.dir/build.make CMakeFiles/hough_kmeans.dir/hough_kmeans.cpp.i
+.PHONY : hough_kmeans.cpp.i
 
-diceDetect.s: diceDetect.cpp.s
+hough_kmeans.s: hough_kmeans.cpp.s
 
-.PHONY : diceDetect.s
+.PHONY : hough_kmeans.s
 
 # target to generate assembly for a file
-diceDetect.cpp.s:
-	$(MAKE) -f CMakeFiles/diceDetect.dir/build.make CMakeFiles/diceDetect.dir/diceDetect.cpp.s
-.PHONY : diceDetect.cpp.s
+hough_kmeans.cpp.s:
+	$(MAKE) -f CMakeFiles/hough_kmeans.dir/build.make CMakeFiles/hough_kmeans.dir/hough_kmeans.cpp.s
+.PHONY : hough_kmeans.cpp.s
 
 # Help Target
 help:
@@ -175,10 +175,10 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... diceDetect"
-	@echo "... diceDetect.o"
-	@echo "... diceDetect.i"
-	@echo "... diceDetect.s"
+	@echo "... hough_kmeans"
+	@echo "... hough_kmeans.o"
+	@echo "... hough_kmeans.i"
+	@echo "... hough_kmeans.s"
 .PHONY : help
 
 

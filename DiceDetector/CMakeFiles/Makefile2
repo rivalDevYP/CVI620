@@ -70,7 +70,7 @@ CMAKE_BINARY_DIR = /home/yathavan/Documents/Semester6/SCHOOL/SEMESTER6/CVI620/La
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/diceDetect.dir/all
+all: CMakeFiles/hough_kmeans.dir/all
 
 .PHONY : all
 
@@ -80,36 +80,36 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/diceDetect.dir/clean
+clean: CMakeFiles/hough_kmeans.dir/clean
 
 .PHONY : clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/diceDetect.dir
+# Target rules for target CMakeFiles/hough_kmeans.dir
 
 # All Build rule for target.
-CMakeFiles/diceDetect.dir/all:
-	$(MAKE) -f CMakeFiles/diceDetect.dir/build.make CMakeFiles/diceDetect.dir/depend
-	$(MAKE) -f CMakeFiles/diceDetect.dir/build.make CMakeFiles/diceDetect.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/yathavan/Documents/Semester6/SCHOOL/SEMESTER6/CVI620/Labs/DiceDetector/CMakeFiles --progress-num=1,2 "Built target diceDetect"
-.PHONY : CMakeFiles/diceDetect.dir/all
+CMakeFiles/hough_kmeans.dir/all:
+	$(MAKE) -f CMakeFiles/hough_kmeans.dir/build.make CMakeFiles/hough_kmeans.dir/depend
+	$(MAKE) -f CMakeFiles/hough_kmeans.dir/build.make CMakeFiles/hough_kmeans.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/yathavan/Documents/Semester6/SCHOOL/SEMESTER6/CVI620/Labs/DiceDetector/CMakeFiles --progress-num=1,2 "Built target hough_kmeans"
+.PHONY : CMakeFiles/hough_kmeans.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/diceDetect.dir/rule: cmake_check_build_system
+CMakeFiles/hough_kmeans.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/yathavan/Documents/Semester6/SCHOOL/SEMESTER6/CVI620/Labs/DiceDetector/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/diceDetect.dir/all
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/hough_kmeans.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/yathavan/Documents/Semester6/SCHOOL/SEMESTER6/CVI620/Labs/DiceDetector/CMakeFiles 0
-.PHONY : CMakeFiles/diceDetect.dir/rule
+.PHONY : CMakeFiles/hough_kmeans.dir/rule
 
 # Convenience name for target.
-diceDetect: CMakeFiles/diceDetect.dir/rule
+hough_kmeans: CMakeFiles/hough_kmeans.dir/rule
 
-.PHONY : diceDetect
+.PHONY : hough_kmeans
 
 # clean rule for target.
-CMakeFiles/diceDetect.dir/clean:
-	$(MAKE) -f CMakeFiles/diceDetect.dir/build.make CMakeFiles/diceDetect.dir/clean
-.PHONY : CMakeFiles/diceDetect.dir/clean
+CMakeFiles/hough_kmeans.dir/clean:
+	$(MAKE) -f CMakeFiles/hough_kmeans.dir/build.make CMakeFiles/hough_kmeans.dir/clean
+.PHONY : CMakeFiles/hough_kmeans.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.
