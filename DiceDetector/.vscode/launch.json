@@ -8,7 +8,7 @@
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/diceDetect",
+            "program": "${workspaceFolder}/hough_kmeans",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

@@ -72,9 +72,9 @@ int main()
 			circles,			// circles
 			cv::HOUGH_GRADIENT, // method
 			1,					// dp
-			0.1,				// minDist
+			2,					// minDist
 			80,					// param1
-			20,					// param2
+			42,					// param2
 			0.1,				// minRadius
 			40);				// maxRadius
 
