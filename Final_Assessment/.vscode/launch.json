@@ -9,7 +9,10 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/braille",
-            "args": [],
+            "args": [
+                "SAM1_sub1.jpg",
+                "SAM1_sub2.jpg"
+            ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],

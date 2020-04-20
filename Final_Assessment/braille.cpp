@@ -11,17 +11,30 @@
 #include <opencv4/opencv2/opencv.hpp>
 #include <opencv4/opencv2/highgui.hpp>
 
-int main()
+void identifyPrintBraille(std::string incomingFileName);
+
+int main(int argc, char *argv[])    
 {
+    for (int index = 1; index < argc; index++)
+    {
+        identifyPrintBraille(argv[index]);
+    }
+
+    return 0;
+}
+
+void identifyPrintBraille(std::string incomingFileName)
+{
+    static int counter = 1;
+
     cv::Mat sub1, bumps_mat, holes_mat, sub1_grey, sub2_grey;
 
-    cv::namedWindow("sub1_window");
-    cv::namedWindow("bumps_window");
-    cv::namedWindow("holes_window");
+    sub1 = cv::imread("project_files_dir/Project_2_1_files/" + incomingFileName, cv::IMREAD_ANYCOLOR);
+    bumps_mat = cv::imread("project_files_dir/Project_2_1_files/" + incomingFileName, cv::IMREAD_ANYCOLOR);
+    holes_mat = cv::imread("project_files_dir/Project_2_1_files/" + incomingFileName, cv::IMREAD_ANYCOLOR);
 
-    sub1 = cv::imread("project_files_dir/Project_2_1_files/SAM1_sub1.jpg", cv::IMREAD_ANYCOLOR);
-    bumps_mat = cv::imread("project_files_dir/Project_2_1_files/SAM1_sub1.jpg", cv::IMREAD_ANYCOLOR);
-    holes_mat = cv::imread("project_files_dir/Project_2_1_files/SAM1_sub1.jpg", cv::IMREAD_ANYCOLOR);
+    cv::Mat holes_bin(sub1.rows, sub1.cols, cv::THRESH_BINARY, cv::Scalar(255, 255, 255));
+    cv::Mat bumps_bin(sub1.rows, sub1.cols, cv::THRESH_BINARY, cv::Scalar(255, 255, 255));
 
     cv::cvtColor(sub1, sub1_grey, cv::COLOR_BGR2GRAY);
 
@@ -41,7 +54,7 @@ int main()
         This works because each bump is identical, and each hole is identical.
         So all bumps will be "grouped" similarly in area and all holes will be grouped similarly in area as well. It all comes down to splitting it correctly and then evaluating. Luckily in my case the splitting point was right down the middle. 
     */
-    
+
     std::vector<std::vector<cv::Point>> bumps_and_holes;
     std::vector<std::vector<cv::Point>> bumps;
     std::vector<std::vector<cv::Point>> holes;
@@ -51,8 +64,7 @@ int main()
         bumps_and_holes,
         hierarchy,
         cv::RETR_TREE,
-        cv::CHAIN_APPROX_SIMPLE
-    );
+        cv::CHAIN_APPROX_SIMPLE);
 
     std::cout << "Total # of bumps/holes: " << bumps_and_holes.size() << std::endl;
 
@@ -73,7 +85,7 @@ int main()
     for (int i = 0; i < widths.size(); i++)
     {
         float width = widths.at(i);
-        
+
         if (width <= median)
         {
             holes.push_back(bumps_and_holes.at(i));
@@ -84,25 +96,29 @@ int main()
         }
     }
 
-    cv::drawContours(bumps_mat, bumps, -1, cv::Scalar(0,255,0), 1);
-    cv::drawContours(holes_mat, holes, -1, cv::Scalar(0,0,255), 1);
+    cv::drawContours(bumps_mat, bumps, -1, cv::Scalar(0, 255, 0), 1);
+    cv::drawContours(holes_mat, holes, -1, cv::Scalar(255, 0, 0), 1);
+    cv::drawContours(bumps_bin, bumps, -1, 0, -1);
+    cv::drawContours(holes_bin, holes, -1, 0, -1);
 
-    cv::imwrite("sub1_window.jpg", sub1_grey);
-    cv::imwrite("bumps_window.jpg", bumps_mat);
-    cv::imwrite("holes_window.jpg", holes_mat);
+    char bumps_holes[256];
+    char bumps_window[256];
+    char holes_window[256];
+    char bumps_bin_window[256];
+    char holes_bin_window[256];
 
-    // while (1)
-    // {
-    //     int keycode = cv::waitKey(0);
-    //     if (keycode == 113)
-    //     {
-    //         exit(0);
-    //     }
-    //     else
-    //     {
-    //         std::cout << "press 'q' to exit!" << std::endl;
-    //     }
-    // }
+    sprintf(bumps_holes, "bumps_holes_%d.jpg", counter);
+    sprintf(bumps_window, "bumps_window_%d.jpg", counter);
+    sprintf(holes_window, "holes_window_%d.jpg", counter);
+    sprintf(bumps_bin_window, "bumps_bin_window_%d.jpg", counter);
+    sprintf(holes_bin_window, "holes_bin_window_%d.jpg", counter);
 
-    return 0;
+    counter++;
+    
+
+    cv::imwrite(bumps_holes, sub1_grey);
+    cv::imwrite(bumps_window, bumps_mat);
+    cv::imwrite(holes_window, holes_mat);
+    cv::imwrite(bumps_bin_window, bumps_bin);
+    cv::imwrite(holes_bin_window, holes_bin);
 }
