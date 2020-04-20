@@ -87,22 +87,22 @@ int main()
     cv::drawContours(bumps_mat, bumps, -1, cv::Scalar(0,255,0), 1);
     cv::drawContours(holes_mat, holes, -1, cv::Scalar(0,0,255), 1);
 
-    cv::imshow("sub1_window", sub1_grey);
-    cv::imshow("bumps_window", bumps_mat);
-    cv::imshow("holes_window", holes_mat);
+    cv::imwrite("sub1_window.jpg", sub1_grey);
+    cv::imwrite("bumps_window.jpg", bumps_mat);
+    cv::imwrite("holes_window.jpg", holes_mat);
 
-    while (1)
-    {
-        int keycode = cv::waitKey(0);
-        if (keycode == 113)
-        {
-            exit(0);
-        }
-        else
-        {
-            std::cout << "press 'q' to exit!" << std::endl;
-        }
-    }
+    // while (1)
+    // {
+    //     int keycode = cv::waitKey(0);
+    //     if (keycode == 113)
+    //     {
+    //         exit(0);
+    //     }
+    //     else
+    //     {
+    //         std::cout << "press 'q' to exit!" << std::endl;
+    //     }
+    // }
 
     return 0;
 }
